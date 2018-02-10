@@ -208,8 +208,8 @@ function owlCarousel() {
   oc.each(function () {
       var el = $(this);
       el.owlCarousel($.extend({
-          loop: true,
-          items: 4,
+          loop: false,
+          items: 2,
           nav: false,
           dots: false,
           margin: 0,
