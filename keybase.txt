@@ -1,0 +1,88 @@
+==================================================================
+https://keybase.io/yannickmcosta
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://addedpixels.com
+  * I am yannickmcosta (https://keybase.io/yannickmcosta) on keybase.
+  * I have a public key with fingerprint 1178 5FD2 F1DC 8777 4A0A  6B08 D727 1CAB FCDC 7E19
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "01013ebc97abc3d512e425933c5a3e516b910835c4f8276d370c17475c79635533c10a",
+      "fingerprint": "11785fd2f1dc87774a0a6b08d7271cabfcdc7e19",
+      "host": "keybase.io",
+      "key_id": "d7271cabfcdc7e19",
+      "kid": "01013ebc97abc3d512e425933c5a3e516b910835c4f8276d370c17475c79635533c10a",
+      "uid": "d2cd3aaf3850d48c3e05de538498e619",
+      "username": "yannickmcosta"
+    },
+    "merkle_root": {
+      "ctime": 1518297177,
+      "hash_meta": "023a8699d8f69f37c170a2e1cc37ea9a6f2779577a984e77fc6bc8248e6744d2",
+      "seqno": 2063715
+    },
+    "revoke": {
+      "sig_ids": [
+        "3c862f0ca20c31b0807faf5f3bf6b7c6c5fbe01ac4dc34c420ea920b6b9571560f"
+      ]
+    },
+    "service": {
+      "hostname": "addedpixels.com",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 1
+  },
+  "ctime": 1518297228,
+  "expire_in": 157680000,
+  "prev": "bdd0fdc4d61ed3132639dde83f396e04e94f91446bd204c424e9c7eb7b9b75c2",
+  "seqno": 42,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.76
+Comment: https://keybase.io/crypto
+
+yMPeAnicrZN/TBdlHMe/EKR+nYrVGJpCnkGRgHf33N1zh6DpFEoKJmbGj/r63HPP
+we3L9w7uvl9+fQVluvwxWm40wzY3EyJGoOJMK5xLfizSNM01RUtzTVFTKGVu+Iue
+L9lWW392/9zued6f9+f1vO/z9E55wuUOO/vCrM8e/FQ7I+x4d23Alb9uTX2QUS2t
+ikkNMl4y/iIlGnH8Hq+hMakMy7EcICpWIFIx0ESOJwIvKgBgEQEicpKqcKwMRCzo
+Mg8lDUAWc1CAIoaKBESRCjkWMUmMbphFxC61DdNPbTkOyqKu8TqnYRlCKCAWSSor
+a5CHHEaqjjUMCafQwmLLCVVQOBU5JMWw6Br98Izj/Yf+f+YO/NWHxxpASAeyyGqC
+jAFhRY2IQBYUmUjjfQMOsU3kI1RdhUzTwF4fpuiIqUlifMT2lhCPbVn+UMLYb4R0
+nMjJvAI5COkpkVPs8REqp+w8QLKkKJqsS4oOIAVjEU84jAEkSEGSzkOoiBAiRRYI
+hDqWVCzzAiWBgqDxFMYhZabFpPKsBCAnUgKblFteEmruGEU0O4dJLWAAliVeZzHi
+WQw4Gj8LdaSLOlB1SYVYwqKuEpZDWNAwELDAs7Q9z6o0PJHaSqzOvF0TamaXG3jc
+PPSzHoeANI1opUYlKXFSsOWjUKW25bewVUI3i/3+Uic1FI2/qjSkriCq57GPRzVM
+jU4LrSgntmNYJo2KKv+dGs/LSQypLDVs4jFCChFKMkufUB9STi1VTWN1jbJLHNEA
+B3gJKJRJBjpQJMIKRBF0hRMESdV4NnQ6ukKHSIWqotI5+EeMAk85URH1pOGZyB+w
+CVPTfbQwwhXmdj0ZGR66Ri73pKi/L9fQpmmP4m81rvome2J/Vbey9n7m/LUkMXbB
+zdl7hjc0XRWk/LrawS1x6sGdyTNnTD6z4eVzG7fs/uTWroGR4oeuO1czPwgOXhMf
+ZeyLNBOcyxXzRjrbE6/EvLGwa+Zoe2egIXzdxSMvMVZDfU7M8jUJ345kdTxsdfdd
+SMu+93T4wLFLJ5vbDp3Ofz4h2lX85THhAN66LC19U9uhsKGRxgvH4ey5G1v9wdqJ
+ddWLr3fu//Ve9eS2xu74c8srylaM7PB9On+lE/t71+2pubWv4az2aU5U5G5j7h15
+2+3DD8KU3HfzYZTPdn3cZedFWKvR6kQ2ZcvJxIWbm8Z2nDp9cHg4bnpLzvu9J3Lr
+YhZM+fBNsXp0WV3Wan46zvPG3ezbbuesT/46Z2CbFRgNkjNT0hNyM490nB9tfScf
+LarY1ecdmDDnBpNhRg+crhlbcnGSa8mqlui1lWnP+P6YtTTj0N2Gvtqlcuzt3K8a
+igoiXzl8vgUfvBR5+b0brmzn1PVrY8lfuDPzmsKrIsJjzszf2TUY2VMf81xD9sPf
+4j4fIMCYE9aW2N7/Vk/hL/tjF+89sshVlln3w6QZ52YlpmeGS2ZzWry7d8/3hRN2
+bb5/0XUy6kVir1jirOp4NuvV9nsfFez7bjDpbkT5vKlDres3nfi5+cfi6r1Xlr7e
+U302O9jsTl7Zrx42659aHBw+kByFtvuONgUq/wSj7vrG
+=2y/8
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/yannickmcosta
+
+==================================================================
+
