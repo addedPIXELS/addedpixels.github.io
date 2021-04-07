@@ -1,0 +1,32 @@
+<CiscoIPPhoneDirectory>
+	<Title>SPT SC Unit 318 Phone Directory</Title> 
+	<Prompt>Make a selection</Prompt> 
+	<DirectoryEntry>
+		<Name>Quartermaster</Name> 
+		<Telephone>201</Telephone> 
+	</DirectoryEntry>
+	<DirectoryEntry>
+		<Name>Office</Name> 
+		<Telephone>202</Telephone> 
+	</DirectoryEntry>
+	<DirectoryEntry>
+		<Name>Galley</Name> 
+		<Telephone>203</Telephone> 
+	</DirectoryEntry>
+	<DirectoryEntry>
+		<Name>Detachment Cdr</Name> 
+		<Telephone>204</Telephone> 
+	</DirectoryEntry>
+	<DirectoryEntry>
+		<Name>Ships Office</Name> 
+		<Telephone>205</Telephone> 
+	</DirectoryEntry>
+	<DirectoryEntry>
+		<Name>CALL ALL PHONES</Name> 
+		<Telephone>500</Telephone> 
+	</DirectoryEntry>
+	<DirectoryEntry>
+		<Name>INTERCOM - ALL PHONES</Name> 
+		<Telephone>600</Telephone> 
+	</DirectoryEntry>
+</CiscoIPPhoneDirectory>
