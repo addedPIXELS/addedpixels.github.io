@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpeedLap • addedPIXELS</title>
+    <meta name="description" content="Professional speed tracking and lap timing app for iOS. Get real-time speeds, comprehensive GPS logging, and Dynamic Island updates for precision driving data.">
+    
+    <link rel="shortcut icon" type="image/png" href="images/logos/addedpixels_favicon_dark.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: rgb(76, 175, 80);
+            --primary-dark: rgb(56, 142, 60);
+            --primary-light: rgb(129, 199, 132);
+            --accent-color: #4caf50;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-light: #9ca3af;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --bg-tertiary: rgba(76, 175, 80, 0.05);
+            --bg-dark: #111827;
+            --border-color: #e5e7eb;
+            --border-primary: rgba(76, 175, 80, 0.3);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-primary: 0 10px 15px -3px rgba(76, 175, 80, 0.2);
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .section {
+            padding: 5rem 0;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Mobile menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        /* Page Header */
+        .page-header {
+            padding: 8rem 0 4rem;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('images/karsten-wurth-inf1783-96082.smaller.jpg') center/cover;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .page-header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Section Titles */
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .section-title p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Feature Cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .feature-card {
+            background: var(--bg-primary);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-primary);
+            border-color: var(--primary-color);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Dark Section */
+        .dark-section {
+            background: var(--bg-dark);
+            color: white;
+        }
+
+        .dark-section .section-title h2,
+        .dark-section .section-title p {
+            color: white;
+        }
+
+        .dark-section .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .dark-section .feature-card h3 {
+            color: white;
+        }
+
+        .dark-section .feature-card p {
+            color: #d1d5db;
+        }
+
+        .dark-section .feature-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Technical Features */
+        .tech-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .tech-card {
+            background: var(--bg-primary);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .tech-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-color);
+        }
+
+        .tech-card h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .tech-card .icon {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .tech-card ul {
+            list-style: none;
+        }
+
+        .tech-card li {
+            padding: 0.25rem 0;
+            color: var(--text-secondary);
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .tech-card li::before {
+            content: '•';
+            color: var(--primary-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Perfect For Section */
+        .perfect-for {
+            background: linear-gradient(135deg, 
+                rgba(76, 175, 80, 0.9), 
+                rgba(56, 142, 60, 0.9)), 
+                url('images/karsten-wurth-inf1783-96082.smaller.jpg') center/cover;
+            color: white;
+            text-align: center;
+        }
+
+        .perfect-for h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+
+        .perfect-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .perfect-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Safety & Privacy Cards */
+        .safety-privacy {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .info-card {
+            background: var(--bg-primary);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .info-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-primary);
+            border-color: var(--primary-color);
+        }
+
+        .info-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .info-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .info-card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Requirements */
+        .requirements {
+            background: var(--bg-secondary);
+            text-align: center;
+        }
+
+        .req-box {
+            background: var(--bg-primary);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .req-box p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .req-box strong {
+            color: var(--text-primary);
+        }
+
+        /* CTA Section */
+        .cta {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2.5rem;
+            background: white;
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: var(--bg-secondary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-primary);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-dark);
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p,
+        .footer-section li {
+            color: #d1d5db;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section a {
+            color: #d1d5db;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-color);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #374151;
+            padding-top: 2rem;
+            text-align: center;
+            color: #9ca3af;
+        }
+
+        .footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            background: #374151;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d1d5db;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-social a:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: var(--shadow-md);
+                gap: 1rem;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .page-header {
+                padding: 6rem 0 3rem;
+            }
+
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .section {
+                padding: 3rem 0;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+
+            .features-grid,
+            .tech-features,
+            .safety-privacy {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .perfect-list {
+                grid-template-columns: 1fr;
+            }
+
+            .cta h2 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+
+    <!-- Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-40530882-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-40530882-1');
+    </script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="container">
+            <div class="nav">
+                <div class="logo">
+                    <img src="images/logos/addedpixels_logo_standard_dark.png" alt="addedPIXELS">
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="about.html" class="nav-link">About</a></li>
+                    <li><a href="index.html#services" class="nav-link">Services</a></li>
+                    <li><a href="index.html#projects" class="nav-link">Projects</a></li>
+                    <li><a href="speedlap.html" class="nav-link active">SpeedLap</a></li>
+                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>SpeedLap</h1>
+            <p>Professional speed tracking and lap timing for iOS</p>
+        </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Track Your Speed with Precision</h2>
+                <p>SpeedLap brings professional-grade speed tracking to your iPhone. Whether you're on a track day, testing your car's performance, or just want accurate speed data, SpeedLap delivers the precision and features you need.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Features -->
+    <section class="section dark-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Core Features</h2>
+                <p>Everything you need for professional speed tracking and lap timing, all in one intuitive iOS app.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3>Real-time Speed Tracking</h3>
+                    <p>Live current speed display with instant updates. Real-time average speed calculation for each section with clear color coding.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-stopwatch"></i>
+                    </div>
+                    <h3>Professional Lap Timing</h3>
+                    <p>Stopwatch-style functionality with unlimited lap sections. Complete history with detailed timing data and session storage.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Dynamic Island Integration</h3>
+                    <p>Live Activities show current and average speeds when backgrounded. Compact and expanded views with real-time updates.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Comprehensive Data Logging</h3>
+                    <p>31+ data points per GPS record with accelerometer, gyroscope, and G-force measurements. Professional CSV export included.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Specifications */
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>What's Included</h2>
+                <p>SpeedLap provides a comprehensive suite of features for professional speed tracking and data analysis.</p>
+            </div>
+
+            <div class="tech-features">
+                <div class="tech-card">
+                    <h4>
+                        <i class="fas fa-desktop icon"></i>
+                        Professional Interface
+                    </h4>
+                    <ul>
+                        <li>Large speed displays with clear color coding</li>
+                        <li>Real-time updates every 0.1 seconds</li>
+                        <li>Clean, driver-focused design</li>
+                        <li>Tab navigation between tracking, history, data, and settings</li>
+                    </ul>
+                </div>
+
+                <div class="tech-card">
+                    <h4>
+                        <i class="fas fa-satellite-dish icon"></i>
+                        Precision GPS Logging
+                    </h4>
+                    <ul>
+                        <li>Sub-meter accuracy positioning</li>
+                        <li>Standard and ellipsoidal altitude measurements</li>
+                        <li>Speed, course, and heading data with accuracy metrics</li>
+                        <li>GPS source identification (GPS/WiFi/Cellular/Simulated)</li>
+                    </ul>
+                </div>
+
+                <div class="tech-card">
+                    <h4>
+                        <i class="fas fa-cogs icon"></i>
+                        Advanced Sensor Data
+                    </h4>
+                    <ul>
+                        <li>Accelerometer data (X, Y, Z axes) at 50Hz sampling rate</li>
+                        <li>Gyroscope measurements for rotational analysis</li>
+                        <li>G-force calculations: lateral, longitudinal, vertical, total</li>
+                        <li>Device attitude: pitch, roll, yaw measurements</li>
+                    </ul>
+                </div>
+
+                <div class="tech-card">
+                    <h4>
+                        <i class="fas fa-share-alt icon"></i>
+                        Export & Sharing
+                    </h4>
+                    <ul>
+                        <li>Complete CSV export with all sensor data</li>
+                        <li>Professional formatting for analysis tools</li>
+                        <li>iOS share integration</li>
+                        <li>Millisecond-precision timestamps</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Perfect For Section -->
+    <section class="section perfect-for">
+        <div class="container">
+            <h2>Perfect For</h2>
+            <div class="perfect-list">
+                <div class="perfect-item">
+                    <h4><i class="fas fa-flag-checkered" style="margin-right: 0.5rem;"></i>Track Day Enthusiasts</h4>
+                    <p>Racing drivers and track day participants</p>
+                </div>
+                <div class="perfect-item">
+                    <h4><i class="fas fa-car" style="margin-right: 0.5rem;"></i>Automotive Testing</h4>
+                    <p>Vehicle performance testing and data collection</p>
+                </div>
+                <div class="perfect-item">
+                    <h4><i class="fas fa-graduation-cap" style="margin-right: 0.5rem;"></i>Driving Instruction</h4>
+                    <p>Performance driving instruction and training</p>
+                </div>
+                <div class="perfect-item">
+                    <h4><i class="fas fa-calculator" style="margin-right: 0.5rem;"></i>Vehicle Dynamics</h4>
+                    <p>Professional vehicle dynamics analysis</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Safety & Privacy Section -->
+    <section class="section">
+        <div class="container">
+            <div class="safety-privacy">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Safety First</h3>
+                    <p>SpeedLap includes a comprehensive safety disclaimer that must be accepted before use. The app is designed for passenger use or when the vehicle is safely stopped. We take safety seriously and require users to acknowledge proper usage guidelines.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>Privacy Protected</h3>
+                    <p>Your data stays on your device. SpeedLap doesn't send your location or driving data anywhere - everything is stored locally and only shared when you choose to export it.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Requirements Section -->
+    <section class="section requirements">
+        <div class="container">
+            <div class="section-title">
+                <h2>Requirements</h2>
+                <p>What you need to get started with SpeedLap</p>
+            </div>
+            
+            <div class="req-box">
+                <p>
+                    <strong>iPhone with iOS 16.1 or later</strong> for Live Activities<br>
+                    <strong>Location permission</strong> for GPS tracking<br>
+                    <strong>Motion sensor access</strong> (automatically granted)
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="section cta">
+        <div class="container">
+            <h2>Download SpeedLap Today</h2>
+            <p>Start tracking your performance with professional precision</p>
+            <a href="#" class="btn">
+                <i class="fab fa-apple"></i>
+                Available on the App Store
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-phone" style="margin-right: 0.5rem;"></i><strong>UK:</strong> +44 (0) 1625 80 30 40</p>
+                    <p><i class="fas fa-phone" style="margin-right: 0.5rem;"></i><strong>UK Non-Geo:</strong> +44 (0) 33 3443 1009</p>
+                    <p><i class="fas fa-phone" style="margin-right: 0.5rem;"></i><strong>US:</strong> +1 702 904-9404</p>
+                    <p><i class="fas fa-envelope" style="margin-right: 0.5rem;"></i>theteam@addedpixels.com</p>
+                    <p><small>* Calls may be recorded</small></p>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Business Hours</h3>
+                    <p><i class="fas fa-clock" style="margin-right: 0.5rem;"></i>UK: 11:00AM - 7:00PM BST</p>
+                    <p><i class="fas fa-clock" style="margin-right: 0.5rem;"></i>US: 3:00AM - 1:00PM PDT</p>
+                </div>
+
+                <div class="footer-section">
+                    <h3>SpeedLap</h3>
+                    <p>Professional speed tracking and lap timing for iOS devices. Built with precision and safety in mind.</p>
+                    <p>Experience the ultimate driving companion with comprehensive data logging and Dynamic Island integration.</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-social">
+                    <a href="http://www.twitter.com/addedPIXELS" target="_blank">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://www.addedpixels.com" target="_blank">
+                        <i class="fas fa-globe"></i>
+                    </a>
+                </div>
+                <p>&copy; 2014-2025 addedPIXELS. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+                header.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.boxShadow = 'none';
+            }
+        });
+
+        // Add fade-in animation to elements when they come into view
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards and sections
+        document.querySelectorAll('.feature-card, .tech-card, .info-card, .section-title').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+                // Close mobile menu if open
+                document.querySelector('.nav-menu').classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
