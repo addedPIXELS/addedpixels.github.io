@@ -124,6 +124,56 @@
             width: 100%;
         }
 
+        /* Dropdown menu */
+        .nav-dropdown {
+            position: relative;
+        }
+        
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 180px;
+            box-shadow: var(--shadow-lg);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: var(--transition);
+            z-index: 1000;
+            list-style: none;
+            padding: 0.5rem 0;
+            margin: 0;
+        }
+        
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-link {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .dropdown-link:hover {
+            background-color: var(--bg-tertiary);
+            color: var(--primary-color);
+        }
+
         /* Mobile menu */
         .mobile-menu-btn {
             display: none;
@@ -487,6 +537,23 @@
                 display: flex;
             }
 
+            .dropdown-menu {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                border: none;
+                background: var(--bg-secondary);
+                margin: 0.5rem 0;
+                border-radius: var(--border-radius);
+            }
+
+            .dropdown-link {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
             .page-header {
                 padding: 6rem 0 3rem;
             }
@@ -566,6 +633,13 @@
                     <li><a href="about.html" class="nav-link active">About</a></li>
                     <li><a href="index.html#services" class="nav-link">Services</a></li>
                     <li><a href="index.html#projects" class="nav-link">Projects</a></li>
+                    <li class="nav-dropdown">
+                        <a href="#" class="nav-link dropdown-toggle">SpeedLap <i class="fas fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="speedlap.html" class="dropdown-link">SpeedLap App</a></li>
+                            <li><a href="speedlap-insights.html" class="dropdown-link">SpeedLap Insights</a></li>
+                        </ul>
+                    </li>
                     <li><a href="index.html#team" class="nav-link">Team</a></li>
                     <li><a href="index.html#contact" class="nav-link">Contact</a></li>
                 </ul>

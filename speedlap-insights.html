@@ -1,0 +1,1951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpeedLap Insights • addedPIXELS</title>
+    <meta name="description" content="Privacy-focused SpeedLap CSV data visualization and analysis tool. Analyze your SpeedLap telemetry data locally in your browser - no data uploaded to servers.">
+    
+    <link rel="shortcut icon" type="image/png" href="images/logos/addedpixels_favicon_dark.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --primary-color: rgb(76, 175, 80);
+            --primary-dark: rgb(56, 142, 60);
+            --primary-light: rgb(129, 199, 132);
+            --accent-color: #4caf50;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-light: #9ca3af;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --bg-tertiary: rgba(76, 175, 80, 0.05);
+            --bg-dark: #111827;
+            --border-color: #e5e7eb;
+            --border-primary: rgba(76, 175, 80, 0.3);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-primary: 0 10px 15px -3px rgba(76, 175, 80, 0.2);
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('images/karsten-wurth-inf1783-96082.smaller.jpg') center/cover;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        .stat-card {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-primary);
+            border-color: var(--primary-color);
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: var(--bg-secondary);
+        }
+        .data-section {
+            display: none;
+        }
+        .table-container {
+            overflow-x: auto;
+            width: 100%;
+        }
+        #dataTable {
+            font-size: 0.9rem;
+        }
+        .filter-container {
+            background-color: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+        }
+        #map {
+            height: 500px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+        }
+        .map-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .nav-tabs .nav-link {
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+        .nav-tabs .nav-link:hover {
+            color: var(--primary-dark);
+        }
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            font-weight: 600;
+            border-color: var(--primary-color) var(--primary-color) var(--bg-primary);
+        }
+        /* Telemetry View Styles */
+        .telemetry-container {
+            padding: 20px;
+        }
+        .telemetry-controls {
+            background-color: var(--bg-secondary);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+        .gauge-container {
+            text-align: center;
+            padding: 15px;
+        }
+        .gauge-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        .telemetry-info {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+        .telemetry-stat {
+            margin: 5px 0;
+        }
+        .attitude-indicator {
+            background: var(--bg-dark);
+            border-radius: var(--border-radius);
+            padding: 10px;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+        .nav-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: var(--primary-color);
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .nav-button:hover {
+            background: var(--primary-dark);
+            transform: scale(1.1);
+        }
+        .nav-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .data-point-slider {
+            width: 100%;
+            margin: 0 10px;
+        }
+        .altitude-meter {
+            background: linear-gradient(to top, #28a745, #ffc107, #dc3545);
+            width: 30px;
+            height: 200px;
+            border-radius: 15px;
+            position: relative;
+            margin: 0 auto;
+        }
+        .altitude-marker {
+            position: absolute;
+            width: 40px;
+            height: 4px;
+            background: white;
+            left: -5px;
+            border-radius: 2px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Dropdown menu */
+        .nav-dropdown {
+            position: relative;
+        }
+        
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 180px;
+            box-shadow: var(--shadow-lg);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: var(--transition);
+            z-index: 1000;
+            list-style: none;
+            padding: 0.5rem 0;
+            margin: 0;
+        }
+        
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-link {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .dropdown-link:hover {
+            background-color: var(--bg-tertiary);
+            color: var(--primary-color);
+        }
+
+        /* Mobile menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+        
+        .footer-social a:hover {
+            background: var(--primary-color) !important;
+            color: white !important;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: var(--shadow-md);
+                gap: 1rem;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .dropdown-menu {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                border: none;
+                background: var(--bg-secondary);
+                margin: 0.5rem 0;
+                border-radius: var(--border-radius);
+            }
+
+            .dropdown-link {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="container">
+            <div class="nav">
+                <div class="logo">
+                    <img src="images/logos/addedpixels_logo_standard_dark.png" alt="addedPIXELS">
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="about.html" class="nav-link">About</a></li>
+                    <li><a href="index.html#services" class="nav-link">Services</a></li>
+                    <li><a href="index.html#projects" class="nav-link">Projects</a></li>
+                    <li class="nav-dropdown">
+                        <a href="#" class="nav-link dropdown-toggle active">SpeedLap <i class="fas fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="speedlap.html" class="dropdown-link">SpeedLap App</a></li>
+                            <li><a href="speedlap-insights.html" class="dropdown-link">SpeedLap Insights</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="index.html#team" class="nav-link">Team</a></li>
+                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Page Header -->
+    <section class="dashboard-header" style="padding-top: 8rem;">
+        <div class="container">
+            <h1 class="mb-2">SpeedLap Insights</h1>
+            <p class="mb-2 opacity-90">Privacy-focused CSV data visualization and analysis for SpeedLap telemetry data</p>
+            <small class="opacity-75"><i class="fas fa-shield-alt me-1"></i>All analysis performed locally in your browser - no data uploaded to servers</small>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- Upload Section -->
+        <div id="uploadSection">
+            <div class="upload-area" onclick="document.getElementById('csvFile').click();">
+                <i class="fas fa-file-csv" style="font-size: 3rem; color: var(--primary-color);"></i>
+                <h4 class="mt-3">Upload SpeedLap CSV Data</h4>
+                <p class="text-muted">Click to browse or drag and drop your SpeedLap CSV export file here</p>
+                <small class="text-muted"><i class="fas fa-info-circle me-1"></i>Supports CSV files exported from the SpeedLap iOS app</small>
+                <input type="file" id="csvFile" accept=".csv" style="display: none;">
+            </div>
+        </div>
+
+        <!-- Data Section -->
+        <div id="dataSection" class="data-section">
+            <!-- Navigation Tabs -->
+            <ul class="nav nav-tabs mb-4" id="dashboardTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="map-tab" data-bs-toggle="tab" data-bs-target="#map-content" type="button">
+                        <i class="fas fa-map"></i> Map View
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats-content" type="button">
+                        <i class="fas fa-chart-line"></i> Statistics
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="table-tab" data-bs-toggle="tab" data-bs-target="#table-content" type="button">
+                        <i class="fas fa-table"></i> Data Table
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="telemetry-tab" data-bs-toggle="tab" data-bs-target="#telemetry-content" type="button">
+                        <i class="fas fa-tachometer-alt"></i> Telemetry View
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="dashboardTabContent">
+                <!-- Map Tab -->
+                <div class="tab-pane fade show active" id="map-content" role="tabpanel">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="showMarkers" checked>
+                                        <label class="form-check-label" for="showMarkers">
+                                            Show Markers
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="showPath" checked>
+                                        <label class="form-check-label" for="showPath">
+                                            Show Path
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="colorBySpeed" checked>
+                                        <label class="form-check-label" for="colorBySpeed">
+                                            Color by Speed
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-sm btn-primary" onclick="fitMapToData()">
+                                        <i class="fas fa-expand-arrows-alt"></i> Fit to Data
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="map"></div>
+                            <div class="mt-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle"></i> Click on markers to see details. Path colors: 
+                                    <span style="color: green;">■ Slow</span> 
+                                    <span style="color: orange;">■ Medium</span> 
+                                    <span style="color: red;">■ Fast</span>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Tab -->
+                <div class="tab-pane fade" id="stats-content" role="tabpanel">
+                    <!-- Statistics Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-3 mb-3">
+                            <div class="card stat-card">
+                                <div class="card-body">
+                                    <h6 class="text-muted">Total Records</h6>
+                                    <div class="stat-value" id="totalRecords">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card stat-card">
+                                <div class="card-body">
+                                    <h6 class="text-muted">Average Speed</h6>
+                                    <div class="stat-value" id="avgSpeed">0</div>
+                                    <small class="text-muted">MPH</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card stat-card">
+                                <div class="card-body">
+                                    <h6 class="text-muted">Max Speed</h6>
+                                    <div class="stat-value" id="maxSpeed">0</div>
+                                    <small class="text-muted">MPH</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card stat-card">
+                                <div class="card-body">
+                                    <h6 class="text-muted">Duration</h6>
+                                    <div class="stat-value" id="duration">0</div>
+                                    <small class="text-muted">minutes</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Stats Row -->
+                    <div class="row mb-4">
+                        <div class="col-md-3 mb-3">
+                            <div class="card stat-card">
+                                <div class="card-body">
+                                    <h6 class="text-muted">Altitude Range</h6>
+                                    <div class="stat-value" id="altitudeRange">0</div>
+                                    <small class="text-muted">meters</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card stat-card">
+                                <div class="card-body">
+                                    <h6 class="text-muted">Max G-Force</h6>
+                                    <div class="stat-value" id="maxGForce">0</div>
+                                    <small class="text-muted">g</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card stat-card">
+                                <div class="card-body">
+                                    <h6 class="text-muted">Avg Accuracy</h6>
+                                    <div class="stat-value" id="avgAccuracy">0</div>
+                                    <small class="text-muted">meters</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card stat-card">
+                                <div class="card-body">
+                                    <h6 class="text-muted">Data Points</h6>
+                                    <div class="stat-value" id="dataPoints">0</div>
+                                    <small class="text-muted">per minute</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Distance Card -->
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <div class="card stat-card">
+                                <div class="card-body">
+                                    <h6 class="text-muted">Total Distance Traveled</h6>
+                                    <div class="stat-value" id="totalDistance">0</div>
+                                    <small class="text-muted">kilometers</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card stat-card">
+                                <div class="card-body">
+                                    <h6 class="text-muted">Average Speed</h6>
+                                    <div class="stat-value" id="avgSpeedKmh">0</div>
+                                    <small class="text-muted">km/h</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table Tab -->
+                <div class="tab-pane fade" id="table-content" role="tabpanel">
+                    <!-- Filter Section -->
+                    <div class="filter-container mb-4">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="speedFilter" class="form-label">Filter by Speed (MPH)</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="minSpeed" placeholder="Min">
+                                    <span class="input-group-text">to</span>
+                                    <input type="number" class="form-control" id="maxSpeedFilter" placeholder="Max">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="altitudeFilter" class="form-label">Filter by Altitude (m)</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="minAltitude" placeholder="Min">
+                                    <span class="input-group-text">to</span>
+                                    <input type="number" class="form-control" id="maxAltitude" placeholder="Max">
+                                </div>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button class="btn btn-primary me-2" onclick="applyFilters()">Apply Filters</button>
+                                <button class="btn btn-secondary" onclick="clearFilters()">Clear</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Table -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">GPS Data Records</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-container">
+                                <table id="dataTable" class="table table-striped table-hover w-100">
+                                    <thead>
+                                        <tr>
+                                            <th>Timestamp</th>
+                                            <th>Latitude</th>
+                                            <th>Longitude</th>
+                                            <th>Altitude (m)</th>
+                                            <th>Speed (MPH)</th>
+                                            <th>Course (°)</th>
+                                            <th>H. Accuracy (m)</th>
+                                            <th>Total G-Force</th>
+                                            <th>Pitch (°)</th>
+                                            <th>Roll (°)</th>
+                                            <th>Yaw (°)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Telemetry Tab -->
+                <div class="tab-pane fade" id="telemetry-content" role="tabpanel">
+                    <div class="telemetry-container">
+                        <!-- Navigation Controls -->
+                        <div class="telemetry-controls">
+                            <div class="row align-items-center">
+                                <div class="col-md-2">
+                                    <button class="nav-button" id="prevPoint" onclick="navigatePoint(-1)">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <button class="nav-button ms-2" id="nextPoint" onclick="navigatePoint(1)">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="range" class="form-range data-point-slider" id="pointSlider" min="0" max="0" value="0" onchange="jumpToPoint(this.value)">
+                                    <div class="text-center">
+                                        <small>Data Point: <span id="currentPointIndex">0</span> / <span id="totalPoints">0</span></small>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 text-end">
+                                    <button class="btn btn-sm btn-primary" onclick="playAnimation()">
+                                        <i class="fas fa-play"></i> Play
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="stopAnimation()">
+                                        <i class="fas fa-stop"></i> Stop
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Telemetry Info Bar -->
+                        <div class="telemetry-info">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="telemetry-stat">
+                                        <i class="fas fa-clock"></i> <strong>Time:</strong> <span id="telemetryTime">--</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="telemetry-stat">
+                                        <i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> <span id="telemetryLocation">--</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="telemetry-stat">
+                                        <i class="fas fa-mountain"></i> <strong>Altitude:</strong> <span id="telemetryAltitude">--</span> m
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="telemetry-stat">
+                                        <i class="fas fa-crosshairs"></i> <strong>Accuracy:</strong> <span id="telemetryAccuracy">--</span> m
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Main Gauges Row -->
+                        <div class="row mb-4">
+                            <!-- Speedometer -->
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body gauge-container">
+                                        <div class="gauge-title">Speed (MPH)</div>
+                                        <canvas id="speedometer" width="250" height="250"></canvas>
+                                        <div class="mt-2">
+                                            <h4 id="speedValue">0</h4>
+                                            <small class="text-muted">Current: <span id="speedText">0.0 MPH</span></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- G-Force Display -->
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body gauge-container">
+                                        <div class="gauge-title">G-Force</div>
+                                        <canvas id="gforceDisplay" width="250" height="250"></canvas>
+                                        <div class="mt-2">
+                                            <small class="text-muted">
+                                                X: <span id="gforceX">0.00</span>g | 
+                                                Y: <span id="gforceY">0.00</span>g | 
+                                                Z: <span id="gforceZ">0.00</span>g
+                                            </small><br>
+                                            <strong>Total: <span id="gforceTotal">0.00</span>g</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Compass -->
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body gauge-container">
+                                        <div class="gauge-title">Heading</div>
+                                        <canvas id="compass" width="250" height="250"></canvas>
+                                        <div class="mt-2">
+                                            <h4 id="headingValue">0°</h4>
+                                            <small class="text-muted">Direction: <span id="headingText">N</span></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Attitude Indicators Row -->
+                        <div class="row">
+                            <!-- Pitch Indicator -->
+                            <div class="col-md-4">
+                                <div class="card attitude-indicator">
+                                    <div class="card-body gauge-container">
+                                        <div class="gauge-title text-white">Pitch</div>
+                                        <canvas id="pitchIndicator" width="200" height="200"></canvas>
+                                        <div class="mt-2 text-white">
+                                            <strong><span id="pitchValue">0.0</span>°</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Roll Indicator -->
+                            <div class="col-md-4">
+                                <div class="card attitude-indicator">
+                                    <div class="card-body gauge-container">
+                                        <div class="gauge-title text-white">Roll</div>
+                                        <canvas id="rollIndicator" width="200" height="200"></canvas>
+                                        <div class="mt-2 text-white">
+                                            <strong><span id="rollValue">0.0</span>°</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Yaw/Vertical Speed -->
+                            <div class="col-md-4">
+                                <div class="card attitude-indicator">
+                                    <div class="card-body gauge-container">
+                                        <div class="gauge-title text-white">Yaw & Vertical Speed</div>
+                                        <canvas id="yawIndicator" width="200" height="200"></canvas>
+                                        <div class="mt-2 text-white">
+                                            <strong>Yaw: <span id="yawValue">0.0</span>°</strong><br>
+                                            <small>V.Speed: <span id="vspeedValue">0.0</span> m/s</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Export Button -->
+            <!-- Footer Actions -->
+            <div class="mt-4 p-4" style="background-color: var(--bg-secondary); border-radius: var(--border-radius);">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h6 class="mb-2">Export & Analysis</h6>
+                        <button class="btn btn-success me-2" onclick="exportFilteredData()">
+                            <i class="fas fa-download me-1"></i>Export Filtered Data
+                        </button>
+                        <button class="btn btn-info me-2" onclick="showSummaryReport()">
+                            <i class="fas fa-file-alt me-1"></i>Generate Summary Report
+                        </button>
+                        <button class="btn btn-secondary" onclick="location.reload()">
+                            <i class="fas fa-upload me-1"></i>Upload New File
+                        </button>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <small class="text-muted">
+                            <i class="fas fa-shield-alt me-1"></i>Privacy Protected<br>
+                            All data processed locally in your browser
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" style="background: var(--bg-dark); color: white; padding: 3rem 0 1rem; margin-top: 4rem;">
+        <div class="container">
+            <div class="footer-content" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+                <div class="footer-section">
+                    <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">Contact Us</h3>
+                    <p style="color: #d1d5db; margin-bottom: 0.5rem;"><i class="fas fa-phone" style="margin-right: 0.5rem;"></i><strong>UK:</strong> +44 (0) 1625 80 30 40</p>
+                    <p style="color: #d1d5db; margin-bottom: 0.5rem;"><i class="fas fa-phone" style="margin-right: 0.5rem;"></i><strong>UK Non-Geo:</strong> +44 (0) 33 3443 1009</p>
+                    <p style="color: #d1d5db; margin-bottom: 0.5rem;"><i class="fas fa-phone" style="margin-right: 0.5rem;"></i><strong>US:</strong> +1 702 904-9404</p>
+                    <p style="color: #d1d5db; margin-bottom: 0.5rem;"><i class="fas fa-envelope" style="margin-right: 0.5rem;"></i>theteam@addedpixels.com</p>
+                    <p style="color: #d1d5db; margin-bottom: 0.5rem;"><small>* Calls may be recorded</small></p>
+                </div>
+
+                <div class="footer-section">
+                    <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">Business Hours</h3>
+                    <p style="color: #d1d5db; margin-bottom: 0.5rem;"><i class="fas fa-clock" style="margin-right: 0.5rem;"></i>UK: 11:00AM - 7:00PM BST</p>
+                    <p style="color: #d1d5db; margin-bottom: 0.5rem;"><i class="fas fa-clock" style="margin-right: 0.5rem;"></i>US: 3:00AM - 1:00PM PDT</p>
+                </div>
+
+                <div class="footer-section">
+                    <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">SpeedLap Insights</h3>
+                    <p style="color: #d1d5db; margin-bottom: 0.5rem;">Privacy-focused telemetry analysis tool for SpeedLap CSV data. Visualize your driving performance data locally in your browser.</p>
+                    <p style="color: #d1d5db;"><a href="speedlap.html" style="color: var(--accent-color); text-decoration: none;">Download SpeedLap iOS App</a></p>
+                </div>
+            </div>
+
+            <div class="footer-bottom" style="border-top: 1px solid #374151; padding-top: 2rem; text-align: center; color: #9ca3af;">
+                <div class="footer-social" style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+                    <a href="http://www.twitter.com/addedPIXELS" target="_blank" style="width: 40px; height: 40px; background: #374151; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #d1d5db; text-decoration: none; transition: var(--transition);">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://www.addedpixels.com" target="_blank" style="width: 40px; height: 40px; background: #374151; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #d1d5db; text-decoration: none; transition: var(--transition);">
+                        <i class="fas fa-globe"></i>
+                    </a>
+                </div>
+                <p>&copy; 2014-2025 addedPIXELS. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        let gpsData = [];
+        let dataTable = null;
+        let map = null;
+        let pathLayer = null;
+        let markersLayer = null;
+        let currentPointIndex = 0;
+        let animationInterval = null;
+        let previousAltitude = null;
+        let previousTime = null;
+
+        // Initialize Leaflet map
+        function initializeMap() {
+            map = L.map('map').setView([0, 0], 2);
+            
+            // Add OpenStreetMap tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 19
+            }).addTo(map);
+
+            // Create layer groups
+            pathLayer = L.layerGroup().addTo(map);
+            markersLayer = L.layerGroup().addTo(map);
+        }
+
+        // File upload handling
+        document.getElementById('csvFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                Papa.parse(file, {
+                    header: true,
+                    dynamicTyping: true,
+                    complete: function(results) {
+                        gpsData = results.data.filter(row => row.timestamp); // Filter out empty rows
+                        processData();
+                    }
+                });
+            }
+        });
+
+        // Drag and drop functionality
+        const uploadArea = document.querySelector('.upload-area');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
+            uploadArea.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-secondary').trim();
+        });
+
+        uploadArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim();
+            uploadArea.style.backgroundColor = 'transparent';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim();
+            uploadArea.style.backgroundColor = 'transparent';
+            
+            const file = e.dataTransfer.files[0];
+            if (file && file.name.endsWith('.csv')) {
+                document.getElementById('csvFile').files = e.dataTransfer.files;
+                const event = new Event('change', { bubbles: true });
+                document.getElementById('csvFile').dispatchEvent(event);
+            }
+        });
+
+        function processData() {
+            // Calculate statistics
+            const stats = calculateStatistics();
+            updateStatistics(stats);
+            
+            // Show data section, hide upload section
+            document.getElementById('uploadSection').style.display = 'none';
+            document.getElementById('dataSection').style.display = 'block';
+            
+            // Initialize map and plot data
+            initializeMap();
+            plotGPSData();
+            
+            // Initialize DataTable
+            initializeDataTable();
+        }
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius of the Earth in km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        function calculateStatistics() {
+            const speeds = gpsData.map(d => d.speed).filter(s => s !== null);
+            const altitudes = gpsData.map(d => d.altitude).filter(a => a !== null);
+            const gForces = gpsData.map(d => d.total_g_force).filter(g => g !== null);
+            const accuracies = gpsData.map(d => d.horizontal_accuracy).filter(a => a !== null);
+            
+            // Calculate duration
+            const firstTime = new Date(gpsData[0].timestamp);
+            const lastTime = new Date(gpsData[gpsData.length - 1].timestamp);
+            const durationMinutes = (lastTime - firstTime) / (1000 * 60);
+            
+            // Calculate total distance
+            let totalDistance = 0;
+            for (let i = 1; i < gpsData.length; i++) {
+                if (gpsData[i].latitude && gpsData[i].longitude && 
+                    gpsData[i-1].latitude && gpsData[i-1].longitude) {
+                    totalDistance += calculateDistance(
+                        gpsData[i-1].latitude, gpsData[i-1].longitude,
+                        gpsData[i].latitude, gpsData[i].longitude
+                    );
+                }
+            }
+            
+            const avgSpeedMPH = speeds.reduce((a, b) => a + b, 0) / speeds.length;
+            const maxSpeedMPH = Math.max(...speeds);
+            // Convert MPH to m/s for calculations (1 MPH = 0.44704 m/s)
+            const avgSpeedMS = avgSpeedMPH * 0.44704;
+            const maxSpeedMS = maxSpeedMPH * 0.44704;
+            // Convert MPH to km/h (1 MPH = 1.60934 km/h)
+            const avgSpeedKmh = avgSpeedMPH * 1.60934;
+            
+            return {
+                totalRecords: gpsData.length,
+                avgSpeed: avgSpeedMS,  // m/s for backward compatibility
+                avgSpeedMPH: avgSpeedMPH,  // MPH for display
+                maxSpeed: maxSpeedMS,  // m/s for backward compatibility
+                maxSpeedMPH: maxSpeedMPH,  // MPH for display
+                duration: durationMinutes,
+                minAltitude: Math.min(...altitudes),
+                maxAltitude: Math.max(...altitudes),
+                maxGForce: Math.max(...gForces),
+                avgAccuracy: accuracies.reduce((a, b) => a + b, 0) / accuracies.length,
+                dataPointsPerMinute: durationMinutes > 0 ? gpsData.length / durationMinutes : 0,
+                totalDistance: totalDistance,
+                avgSpeedKmh: avgSpeedKmh
+            };
+        }
+
+        function updateStatistics(stats) {
+            document.getElementById('totalRecords').textContent = stats.totalRecords.toLocaleString();
+            document.getElementById('avgSpeed').textContent = stats.avgSpeedMPH.toFixed(2);
+            document.getElementById('maxSpeed').textContent = stats.maxSpeedMPH.toFixed(2);
+            document.getElementById('duration').textContent = stats.duration.toFixed(1);
+            document.getElementById('altitudeRange').textContent = 
+                (stats.maxAltitude - stats.minAltitude).toFixed(1);
+            document.getElementById('maxGForce').textContent = stats.maxGForce.toFixed(3);
+            document.getElementById('avgAccuracy').textContent = stats.avgAccuracy.toFixed(1);
+            document.getElementById('dataPoints').textContent = stats.dataPointsPerMinute.toFixed(1);
+            document.getElementById('totalDistance').textContent = stats.totalDistance.toFixed(2);
+            document.getElementById('avgSpeedKmh').textContent = stats.avgSpeedKmh.toFixed(1);
+        }
+
+        function getSpeedColor(speed, maxSpeed) {
+            // Color gradient from green (slow) to red (fast)
+            const ratio = speed / maxSpeed;
+            if (ratio < 0.33) return '#00ff00';
+            if (ratio < 0.66) return '#ffaa00';
+            return '#ff0000';
+        }
+
+        function plotGPSData() {
+            if (!map || gpsData.length === 0) return;
+            
+            const coords = [];
+            const maxSpeed = Math.max(...gpsData.map(d => d.speed || 0));
+            
+            // Clear existing layers
+            pathLayer.clearLayers();
+            markersLayer.clearLayers();
+            
+            // Process each data point
+            gpsData.forEach((point, index) => {
+                if (point.latitude && point.longitude) {
+                    const coord = [point.latitude, point.longitude];
+                    coords.push(coord);
+                    
+                    // Add markers at intervals (every 10th point) or start/end
+                    if (index === 0 || index === gpsData.length - 1 || index % 10 === 0) {
+                        const color = index === 0 ? 'green' : (index === gpsData.length - 1 ? 'red' : 'blue');
+                        const marker = L.circleMarker(coord, {
+                            radius: 5,
+                            fillColor: color,
+                            color: '#000',
+                            weight: 1,
+                            opacity: 1,
+                            fillOpacity: 0.8
+                        });
+                        
+                        // Add popup with details
+                        marker.bindPopup(`
+                            <b>Point ${index + 1}</b><br>
+                            Time: ${point.timestamp}<br>
+                            Speed: ${point.speed?.toFixed(2)} MPH<br>
+                            Altitude: ${point.altitude?.toFixed(1)} m<br>
+                            Accuracy: ${point.horizontal_accuracy?.toFixed(1)} m<br>
+                            G-Force: ${point.total_g_force?.toFixed(3)} g
+                        `);
+                        
+                        markersLayer.addLayer(marker);
+                    }
+                }
+            });
+            
+            // Draw path with color segments based on speed
+            if (document.getElementById('colorBySpeed').checked) {
+                for (let i = 1; i < coords.length; i++) {
+                    const speed = gpsData[i].speed || 0;
+                    const color = getSpeedColor(speed, maxSpeed);
+                    const segment = L.polyline([coords[i-1], coords[i]], {
+                        color: color,
+                        weight: 4,
+                        opacity: 0.8
+                    });
+                    pathLayer.addLayer(segment);
+                }
+            } else {
+                // Draw single path
+                const path = L.polyline(coords, {
+                    color: getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim(),
+                    weight: 4,
+                    opacity: 0.8
+                });
+                pathLayer.addLayer(path);
+            }
+            
+            // Fit map to bounds
+            if (coords.length > 0) {
+                map.fitBounds(coords);
+            }
+        }
+
+        // Map control functions
+        document.getElementById('showMarkers').addEventListener('change', function(e) {
+            if (e.target.checked) {
+                map.addLayer(markersLayer);
+            } else {
+                map.removeLayer(markersLayer);
+            }
+        });
+
+        document.getElementById('showPath').addEventListener('change', function(e) {
+            if (e.target.checked) {
+                map.addLayer(pathLayer);
+            } else {
+                map.removeLayer(pathLayer);
+            }
+        });
+
+        document.getElementById('colorBySpeed').addEventListener('change', function(e) {
+            plotGPSData(); // Redraw with new color settings
+        });
+
+        function fitMapToData() {
+            const coords = gpsData
+                .filter(p => p.latitude && p.longitude)
+                .map(p => [p.latitude, p.longitude]);
+            if (coords.length > 0) {
+                map.fitBounds(coords);
+            }
+        }
+
+        function initializeDataTable() {
+            if (dataTable) {
+                dataTable.destroy();
+            }
+            
+            dataTable = $('#dataTable').DataTable({
+                data: gpsData,
+                columns: [
+                    { data: 'timestamp' },
+                    { data: 'latitude', render: (data) => data ? data.toFixed(6) : '' },
+                    { data: 'longitude', render: (data) => data ? data.toFixed(6) : '' },
+                    { data: 'altitude', render: (data) => data ? data.toFixed(1) : '' },
+                    { data: 'speed', render: (data) => data ? data.toFixed(2) : '' },
+                    { data: 'course', render: (data) => data ? data.toFixed(1) : '' },
+                    { data: 'horizontal_accuracy', render: (data) => data ? data.toFixed(1) : '' },
+                    { data: 'total_g_force', render: (data) => data ? data.toFixed(3) : '' },
+                    { data: 'pitch', render: (data) => data ? data.toFixed(2) : '' },
+                    { data: 'roll', render: (data) => data ? data.toFixed(2) : '' },
+                    { data: 'yaw', render: (data) => data ? data.toFixed(2) : '' }
+                ],
+                pageLength: 25,
+                responsive: true,
+                order: [[0, 'asc']]
+            });
+        }
+
+        function applyFilters() {
+            const minSpeed = parseFloat(document.getElementById('minSpeed').value) || -Infinity;
+            const maxSpeed = parseFloat(document.getElementById('maxSpeedFilter').value) || Infinity;
+            const minAlt = parseFloat(document.getElementById('minAltitude').value) || -Infinity;
+            const maxAlt = parseFloat(document.getElementById('maxAltitude').value) || Infinity;
+            
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                const speed = parseFloat(data[4]) || 0;
+                const altitude = parseFloat(data[3]) || 0;
+                
+                return speed >= minSpeed && speed <= maxSpeed && 
+                       altitude >= minAlt && altitude <= maxAlt;
+            });
+            
+            dataTable.draw();
+            $.fn.dataTable.ext.search.pop();
+        }
+
+        function clearFilters() {
+            document.getElementById('minSpeed').value = '';
+            document.getElementById('maxSpeedFilter').value = '';
+            document.getElementById('minAltitude').value = '';
+            document.getElementById('maxAltitude').value = '';
+            dataTable.draw();
+        }
+
+        function exportFilteredData() {
+            const filteredData = dataTable.rows({ search: 'applied' }).data().toArray();
+            const csv = Papa.unparse(filteredData);
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'filtered_gps_data.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        function showSummaryReport() {
+            const filteredData = dataTable.rows({ search: 'applied' }).data().toArray();
+            const stats = calculateStatistics();
+            
+            const report = `
+GPS Data Summary Report
+=======================
+Generated: ${new Date().toLocaleString()}
+
+Dataset Overview:
+- Total Records: ${stats.totalRecords}
+- Duration: ${stats.duration.toFixed(1)} minutes
+- Total Distance: ${stats.totalDistance.toFixed(2)} km
+- Data Points per Minute: ${stats.dataPointsPerMinute.toFixed(1)}
+
+Speed Statistics:
+- Average Speed: ${stats.avgSpeedMPH.toFixed(2)} MPH (${stats.avgSpeedKmh.toFixed(1)} km/h)
+- Maximum Speed: ${stats.maxSpeedMPH.toFixed(2)} MPH (${(stats.maxSpeedMPH * 1.60934).toFixed(1)} km/h)
+
+Altitude Information:
+- Minimum Altitude: ${stats.minAltitude.toFixed(1)} m
+- Maximum Altitude: ${stats.maxAltitude.toFixed(1)} m
+- Altitude Range: ${(stats.maxAltitude - stats.minAltitude).toFixed(1)} m
+
+Motion Data:
+- Maximum G-Force: ${stats.maxGForce.toFixed(3)} g
+- Average GPS Accuracy: ${stats.avgAccuracy.toFixed(1)} m
+
+Filtered Results:
+- Records Shown: ${filteredData.length} of ${stats.totalRecords}
+            `;
+            
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'gps_summary_report.txt';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // ============ TELEMETRY VIEW FUNCTIONS ============
+        
+        function initializeTelemetry() {
+            if (gpsData.length === 0) return;
+            
+            document.getElementById('totalPoints').textContent = gpsData.length;
+            document.getElementById('pointSlider').max = gpsData.length - 1;
+            currentPointIndex = 0;
+            updateTelemetryDisplay();
+        }
+
+        function navigatePoint(direction) {
+            currentPointIndex += direction;
+            currentPointIndex = Math.max(0, Math.min(gpsData.length - 1, currentPointIndex));
+            document.getElementById('pointSlider').value = currentPointIndex;
+            updateTelemetryDisplay();
+        }
+
+        function jumpToPoint(index) {
+            currentPointIndex = parseInt(index);
+            updateTelemetryDisplay();
+        }
+
+        function playAnimation() {
+            if (animationInterval) return;
+            
+            animationInterval = setInterval(() => {
+                if (currentPointIndex < gpsData.length - 1) {
+                    navigatePoint(1);
+                } else {
+                    stopAnimation();
+                }
+            }, 100); // Update every 100ms
+        }
+
+        function stopAnimation() {
+            if (animationInterval) {
+                clearInterval(animationInterval);
+                animationInterval = null;
+            }
+        }
+
+        function updateTelemetryDisplay() {
+            if (!gpsData || gpsData.length === 0 || currentPointIndex >= gpsData.length) return;
+            
+            const point = gpsData[currentPointIndex];
+            
+            // Update navigation controls
+            document.getElementById('currentPointIndex').textContent = currentPointIndex + 1;
+            document.getElementById('prevPoint').disabled = currentPointIndex === 0;
+            document.getElementById('nextPoint').disabled = currentPointIndex === gpsData.length - 1;
+            
+            // Update info bar
+            document.getElementById('telemetryTime').textContent = point.timestamp || '--';
+            document.getElementById('telemetryLocation').textContent = 
+                point.latitude && point.longitude ? 
+                `${point.latitude.toFixed(6)}, ${point.longitude.toFixed(6)}` : '--';
+            document.getElementById('telemetryAltitude').textContent = 
+                point.altitude ? point.altitude.toFixed(1) : '--';
+            document.getElementById('telemetryAccuracy').textContent = 
+                point.horizontal_accuracy ? point.horizontal_accuracy.toFixed(1) : '--';
+            
+            // Calculate vertical speed if we have previous data
+            let vSpeed = 0;
+            if (previousAltitude !== null && previousTime !== null && currentPointIndex > 0) {
+                const prevPoint = gpsData[currentPointIndex - 1];
+                const timeDiff = (new Date(point.timestamp) - new Date(prevPoint.timestamp)) / 1000; // seconds
+                if (timeDiff > 0 && point.altitude && prevPoint.altitude) {
+                    vSpeed = (point.altitude - prevPoint.altitude) / timeDiff;
+                }
+            }
+            
+            // Update all gauges
+            drawSpeedometer(point.speed || 0);
+            drawGForce(point.accel_x || 0, point.accel_y || 0, point.accel_z || 0, point.total_g_force || 0);
+            drawCompass(point.course || 0);
+            drawPitchIndicator(point.pitch || 0);
+            drawRollIndicator(point.roll || 0);
+            drawYawIndicator(point.yaw || 0, vSpeed);
+            
+            // Update text values
+            document.getElementById('speedValue').textContent = (point.speed || 0).toFixed(0);
+            document.getElementById('speedText').textContent = `${(point.speed || 0).toFixed(1)} MPH`;
+            document.getElementById('headingValue').textContent = `${Math.round(point.course || 0)}°`;
+            document.getElementById('headingText').textContent = getCompassDirection(point.course || 0);
+            document.getElementById('pitchValue').textContent = (point.pitch || 0).toFixed(1);
+            document.getElementById('rollValue').textContent = (point.roll || 0).toFixed(1);
+            document.getElementById('yawValue').textContent = (point.yaw || 0).toFixed(1);
+            document.getElementById('vspeedValue').textContent = vSpeed.toFixed(1);
+            document.getElementById('gforceX').textContent = (point.accel_x || 0).toFixed(2);
+            document.getElementById('gforceY').textContent = (point.accel_y || 0).toFixed(2);
+            document.getElementById('gforceZ').textContent = (point.accel_z || 0).toFixed(2);
+            document.getElementById('gforceTotal').textContent = (point.total_g_force || 0).toFixed(2);
+            
+            // Store for next iteration
+            previousAltitude = point.altitude;
+            previousTime = point.timestamp;
+        }
+
+        function drawSpeedometer(speed) {
+            const canvas = document.getElementById('speedometer');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 90;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw outer circle
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius + 10, 0, 2 * Math.PI);
+            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            
+            // Draw speed arc
+            const maxSpeed = 200; // Max speed on gauge
+            const startAngle = 0.75 * Math.PI;
+            const endAngle = 2.25 * Math.PI;
+            const speedAngle = startAngle + (speed / maxSpeed) * (endAngle - startAngle);
+            
+            // Draw background arc
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 20;
+            ctx.stroke();
+            
+            // Draw speed arc with gradient
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#00ff00');
+            gradient.addColorStop(0.5, '#ffaa00');
+            gradient.addColorStop(1, '#ff0000');
+            
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, startAngle, speedAngle);
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 20;
+            ctx.stroke();
+            
+            // Draw tick marks
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            for (let i = 0; i <= 20; i++) {
+                const angle = startAngle + (i / 20) * (endAngle - startAngle);
+                const tickLength = i % 5 === 0 ? 15 : 8;
+                const x1 = centerX + Math.cos(angle) * (radius - 30);
+                const y1 = centerY + Math.sin(angle) * (radius - 30);
+                const x2 = centerX + Math.cos(angle) * (radius - 30 - tickLength);
+                const y2 = centerY + Math.sin(angle) * (radius - 30 - tickLength);
+                
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.stroke();
+                
+                // Draw numbers
+                if (i % 5 === 0) {
+                    const num = (i / 20) * maxSpeed;
+                    ctx.font = '12px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    const numX = centerX + Math.cos(angle) * (radius - 45);
+                    const numY = centerY + Math.sin(angle) * (radius - 45);
+                    ctx.fillText(num.toString(), numX, numY);
+                }
+            }
+            
+            // Draw needle
+            ctx.save();
+            ctx.translate(centerX, centerY);
+            ctx.rotate(speedAngle);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(radius - 35, 0);
+            ctx.strokeStyle = '#ff0000';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            ctx.restore();
+            
+            // Draw center circle
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 8, 0, 2 * Math.PI);
+            ctx.fillStyle = '#333';
+            ctx.fill();
+        }
+
+        function drawGForce(x, y, z, total) {
+            const canvas = document.getElementById('gforceDisplay');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const maxG = 3; // Maximum G-force to display
+            const scale = 80; // Pixels per G
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw grid
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            
+            // Draw circles for G levels
+            for (let g = 1; g <= maxG; g++) {
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, g * scale / maxG, 0, 2 * Math.PI);
+                ctx.stroke();
+            }
+            
+            // Draw axes
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(centerX - 100, centerY);
+            ctx.lineTo(centerX + 100, centerY);
+            ctx.moveTo(centerX, centerY - 100);
+            ctx.lineTo(centerX, centerY + 100);
+            ctx.stroke();
+            
+            // Draw labels
+            ctx.font = '12px Arial';
+            ctx.fillStyle = '#666';
+            ctx.textAlign = 'center';
+            ctx.fillText('Lateral', centerX + 110, centerY);
+            ctx.fillText('Longitudinal', centerX, centerY - 105);
+            
+            // Draw G-force vector
+            const gx = Math.min(Math.max(x, -maxG), maxG) * scale / maxG;
+            const gy = Math.min(Math.max(y, -maxG), maxG) * scale / maxG;
+            
+            // Draw trail effect
+            ctx.beginPath();
+            ctx.arc(centerX + gx, centerY - gy, 12, 0, 2 * Math.PI);
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.2)';
+            ctx.fill();
+            
+            // Draw current position
+            ctx.beginPath();
+            ctx.arc(centerX + gx, centerY - gy, 8, 0, 2 * Math.PI);
+            const gColor = total > 2 ? '#ff0000' : total > 1 ? '#ffaa00' : '#00ff00';
+            ctx.fillStyle = gColor;
+            ctx.fill();
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Draw line from center
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(centerX + gx, centerY - gy);
+            ctx.strokeStyle = gColor;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        function drawCompass(heading) {
+            const canvas = document.getElementById('compass');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 90;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw outer circle
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius + 10, 0, 2 * Math.PI);
+            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            
+            // Draw compass rose background
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = '#f8f9fa';
+            ctx.fill();
+            
+            // Save context for rotation
+            ctx.save();
+            ctx.translate(centerX, centerY);
+            ctx.rotate(-heading * Math.PI / 180);
+            
+            // Draw cardinal directions
+            const directions = ['N', 'E', 'S', 'W'];
+            const angles = [0, 90, 180, 270];
+            
+            ctx.font = 'bold 20px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            for (let i = 0; i < directions.length; i++) {
+                const angle = angles[i] * Math.PI / 180;
+                const x = Math.sin(angle) * (radius - 25);
+                const y = -Math.cos(angle) * (radius - 25);
+                
+                ctx.fillStyle = directions[i] === 'N' ? '#ff0000' : '#333';
+                ctx.fillText(directions[i], x, y);
+            }
+            
+            // Draw degree markings
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 1;
+            for (let deg = 0; deg < 360; deg += 10) {
+                const angle = deg * Math.PI / 180;
+                const isCardinal = deg % 90 === 0;
+                const isMajor = deg % 30 === 0;
+                const tickLength = isCardinal ? 15 : isMajor ? 10 : 5;
+                
+                const x1 = Math.sin(angle) * radius;
+                const y1 = -Math.cos(angle) * radius;
+                const x2 = Math.sin(angle) * (radius - tickLength);
+                const y2 = -Math.cos(angle) * (radius - tickLength);
+                
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.lineWidth = isCardinal ? 2 : 1;
+                ctx.stroke();
+                
+                // Draw degree numbers
+                if (deg % 30 === 0 && deg % 90 !== 0) {
+                    ctx.font = '12px Arial';
+                    ctx.fillStyle = '#666';
+                    const numX = Math.sin(angle) * (radius - 25);
+                    const numY = -Math.cos(angle) * (radius - 25);
+                    ctx.fillText(deg.toString(), numX, numY);
+                }
+            }
+            
+            ctx.restore();
+            
+            // Draw fixed pointer (triangle)
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY - radius + 5);
+            ctx.lineTo(centerX - 10, centerY - radius + 20);
+            ctx.lineTo(centerX + 10, centerY - radius + 20);
+            ctx.closePath();
+            ctx.fillStyle = '#ff0000';
+            ctx.fill();
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        function drawPitchIndicator(pitch) {
+            const canvas = document.getElementById('pitchIndicator');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 80;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw horizon line
+            ctx.save();
+            ctx.translate(centerX, centerY);
+            ctx.rotate(-pitch * Math.PI / 180);
+            
+            // Sky
+            ctx.fillStyle = '#87CEEB';
+            ctx.fillRect(-radius, -radius, radius * 2, radius);
+            
+            // Ground
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(-radius, 0, radius * 2, radius);
+            
+            // Horizon line
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(-radius, 0);
+            ctx.lineTo(radius, 0);
+            ctx.stroke();
+            
+            // Pitch marks
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.font = '10px Arial';
+            ctx.fillStyle = '#fff';
+            ctx.textAlign = 'right';
+            
+            for (let angle = -30; angle <= 30; angle += 10) {
+                if (angle === 0) continue;
+                const y = angle * 2; // Scale factor for display
+                ctx.beginPath();
+                ctx.moveTo(-20, y);
+                ctx.lineTo(20, y);
+                ctx.stroke();
+                ctx.fillText(Math.abs(angle) + '°', -25, y + 3);
+            }
+            
+            ctx.restore();
+            
+            // Draw aircraft reference
+            ctx.strokeStyle = '#ffff00';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(centerX - 40, centerY);
+            ctx.lineTo(centerX - 15, centerY);
+            ctx.moveTo(centerX + 15, centerY);
+            ctx.lineTo(centerX + 40, centerY);
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(centerX, centerY + 10);
+            ctx.stroke();
+            
+            // Draw circle border
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        function drawRollIndicator(roll) {
+            const canvas = document.getElementById('rollIndicator');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 80;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw arc background
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, Math.PI, 2 * Math.PI);
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            
+            // Draw roll marks
+            const angles = [-60, -45, -30, -20, -10, 0, 10, 20, 30, 45, 60];
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.font = '10px Arial';
+            ctx.fillStyle = '#fff';
+            ctx.textAlign = 'center';
+            
+            for (let angle of angles) {
+                const rad = (180 + angle) * Math.PI / 180;
+                const isMajor = angle % 30 === 0;
+                const tickLength = isMajor ? 15 : 8;
+                
+                const x1 = centerX + Math.cos(rad) * radius;
+                const y1 = centerY + Math.sin(rad) * radius;
+                const x2 = centerX + Math.cos(rad) * (radius - tickLength);
+                const y2 = centerY + Math.sin(rad) * (radius - tickLength);
+                
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.stroke();
+                
+                if (isMajor) {
+                    const textX = centerX + Math.cos(rad) * (radius - 25);
+                    const textY = centerY + Math.sin(rad) * (radius - 25);
+                    ctx.fillText(Math.abs(angle).toString(), textX, textY);
+                }
+            }
+            
+            // Draw roll pointer
+            const rollRad = (180 + roll) * Math.PI / 180;
+            const pointerX = centerX + Math.cos(rollRad) * (radius - 5);
+            const pointerY = centerY + Math.sin(rollRad) * (radius - 5);
+            
+            ctx.beginPath();
+            ctx.moveTo(pointerX, pointerY);
+            const p1x = centerX + Math.cos(rollRad - 0.2) * (radius - 20);
+            const p1y = centerY + Math.sin(rollRad - 0.2) * (radius - 20);
+            const p2x = centerX + Math.cos(rollRad + 0.2) * (radius - 20);
+            const p2y = centerY + Math.sin(rollRad + 0.2) * (radius - 20);
+            ctx.lineTo(p1x, p1y);
+            ctx.lineTo(p2x, p2y);
+            ctx.closePath();
+            ctx.fillStyle = '#ffff00';
+            ctx.fill();
+            
+            // Draw aircraft symbol
+            ctx.strokeStyle = '#ffff00';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(centerX - 30, centerY);
+            ctx.lineTo(centerX + 30, centerY);
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(centerX, centerY + 15);
+            ctx.stroke();
+            
+            // Draw zero reference triangle
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY - radius + 5);
+            ctx.lineTo(centerX - 5, centerY - radius + 15);
+            ctx.lineTo(centerX + 5, centerY - radius + 15);
+            ctx.closePath();
+            ctx.fillStyle = '#fff';
+            ctx.fill();
+        }
+
+        function drawYawIndicator(yaw, vSpeed) {
+            const canvas = document.getElementById('yawIndicator');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 70;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw yaw indicator (top half)
+            const yawCenterY = centerY * 0.6; // Position yaw indicator higher
+            
+            ctx.save();
+            ctx.translate(centerX, yawCenterY);
+            
+            // Draw yaw arc background
+            ctx.beginPath();
+            ctx.arc(0, 0, radius, Math.PI, 2 * Math.PI);
+            ctx.strokeStyle = '#444';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            
+            // Draw yaw tick marks
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.font = '10px Arial';
+            ctx.fillStyle = '#fff';
+            ctx.textAlign = 'center';
+            
+            for (let angle = -90; angle <= 90; angle += 30) {
+                const rad = (angle) * Math.PI / 180;
+                const tickLength = angle % 90 === 0 ? 15 : 10;
+                const x1 = Math.cos(rad) * radius;
+                const y1 = Math.sin(rad) * radius;
+                const x2 = Math.cos(rad) * (radius - tickLength);
+                const y2 = Math.sin(rad) * (radius - tickLength);
+                
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.stroke();
+                
+                if (angle % 90 === 0) {
+                    const textX = Math.cos(rad) * (radius - 25);
+                    const textY = Math.sin(rad) * (radius - 25);
+                    ctx.fillText(angle.toString() + '°', textX, textY);
+                }
+            }
+            
+            // Draw yaw pointer
+            const yawRad = (Math.min(Math.max(yaw, -90), 90)) * Math.PI / 180;
+            const pointerLength = radius - 10;
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(Math.cos(yawRad) * pointerLength, Math.sin(yawRad) * pointerLength);
+            ctx.strokeStyle = '#ffff00';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            
+            // Draw center dot
+            ctx.beginPath();
+            ctx.arc(0, 0, 5, 0, 2 * Math.PI);
+            ctx.fillStyle = '#fff';
+            ctx.fill();
+            
+            ctx.restore();
+            
+            // Draw vertical speed indicator (bottom half)
+            const vsiCenterY = centerY * 1.4; // Position VSI lower
+            const vsiWidth = 30;
+            const vsiHeight = 50;
+            
+            ctx.save();
+            ctx.translate(centerX, vsiCenterY);
+            
+            // Draw VSI background
+            ctx.fillStyle = '#333';
+            ctx.fillRect(-vsiWidth/2, -vsiHeight, vsiWidth, vsiHeight * 2);
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(-vsiWidth/2, -vsiHeight, vsiWidth, vsiHeight * 2);
+            
+            // Draw scale marks and labels
+            const maxVSpeed = 10; // m/s
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 1;
+            ctx.font = '8px Arial';
+            ctx.fillStyle = '#fff';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+            
+            for (let v = -maxVSpeed; v <= maxVSpeed; v += 5) {
+                const y = -(v / maxVSpeed) * vsiHeight;
+                const tickLength = v === 0 ? vsiWidth/2 : vsiWidth/4;
+                
+                ctx.beginPath();
+                ctx.moveTo(-vsiWidth/2, y);
+                ctx.lineTo(-vsiWidth/2 + tickLength, y);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(vsiWidth/2, y);
+                ctx.lineTo(vsiWidth/2 - tickLength, y);
+                ctx.stroke();
+                
+                if (v !== 0) {
+                    ctx.fillText(v.toString(), vsiWidth/2 + 5, y);
+                }
+            }
+            
+            // Draw zero line
+            ctx.strokeStyle = '#ffff00';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(-vsiWidth/2, 0);
+            ctx.lineTo(vsiWidth/2, 0);
+            ctx.stroke();
+            
+            // Draw VSI needle
+            const clampedVSpeed = Math.min(Math.max(vSpeed, -maxVSpeed), maxVSpeed);
+            const vsiY = -(clampedVSpeed / maxVSpeed) * vsiHeight;
+            
+            ctx.beginPath();
+            ctx.moveTo(-vsiWidth/2 - 8, vsiY);
+            ctx.lineTo(-vsiWidth/2 + 2, vsiY - 6);
+            ctx.lineTo(-vsiWidth/2 + 2, vsiY + 6);
+            ctx.closePath();
+            
+            const needleColor = clampedVSpeed > 0.5 ? '#00ff00' : 
+                               clampedVSpeed < -0.5 ? '#ff0000' : '#ffff00';
+            ctx.fillStyle = needleColor;
+            ctx.fill();
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            
+            ctx.restore();
+        }
+
+        function getCompassDirection(heading) {
+            const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',
+                              'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+            const index = Math.round((heading % 360) / 22.5);
+            return directions[index % 16];
+        }
+
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        });
+
+        // Update processData to initialize telemetry
+        const originalProcessData = processData;
+        processData = function() {
+            originalProcessData();
+            initializeTelemetry();
+        };
+    </script>
+</body>
+</html>

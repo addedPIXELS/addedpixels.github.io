@@ -124,6 +124,56 @@
             width: 100%;
         }
 
+        /* Dropdown menu */
+        .nav-dropdown {
+            position: relative;
+        }
+        
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 180px;
+            box-shadow: var(--shadow-lg);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: var(--transition);
+            z-index: 1000;
+            list-style: none;
+            padding: 0.5rem 0;
+            margin: 0;
+        }
+        
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-link {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .dropdown-link:hover {
+            background-color: var(--bg-tertiary);
+            color: var(--primary-color);
+        }
+
         /* Mobile menu */
         .mobile-menu-btn {
             display: none;
@@ -471,6 +521,18 @@
             box-shadow: var(--shadow-primary);
         }
 
+        .btn-outline-light {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-outline-light:hover {
+            background: white;
+            color: var(--primary-color);
+            border-color: white;
+        }
+
         /* Footer */
         .footer {
             background: var(--bg-dark);
@@ -566,6 +628,23 @@
                 display: flex;
             }
 
+            .dropdown-menu {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                border: none;
+                background: var(--bg-secondary);
+                margin: 0.5rem 0;
+                border-radius: var(--border-radius);
+            }
+
+            .dropdown-link {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
             .page-header {
                 padding: 6rem 0 3rem;
             }
@@ -642,7 +721,14 @@
                     <li><a href="about.html" class="nav-link">About</a></li>
                     <li><a href="index.html#services" class="nav-link">Services</a></li>
                     <li><a href="index.html#projects" class="nav-link">Projects</a></li>
-                    <li><a href="speedlap.html" class="nav-link active">SpeedLap</a></li>
+                    <li class="nav-dropdown">
+                        <a href="#" class="nav-link dropdown-toggle active">SpeedLap <i class="fas fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="speedlap.html" class="dropdown-link">SpeedLap App</a></li>
+                            <li><a href="speedlap-insights.html" class="dropdown-link">SpeedLap Insights</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="index.html#team" class="nav-link">Team</a></li>
                     <li><a href="index.html#contact" class="nav-link">Contact</a></li>
                 </ul>
                 <button class="mobile-menu-btn">
@@ -656,16 +742,22 @@
     <section class="page-header">
         <div class="container">
             <h1>SpeedLap</h1>
-            <p>Professional speed tracking and lap timing for iOS</p>
+            <p>Professional speed tracking and comprehensive fuel management for iOS</p>
         </div>
     </section>
 
     <!-- Overview Section -->
     <section class="section">
         <div class="container">
-            <div class="section-title">
+            <div class="section-title" style="margin-bottom: 1rem;">
                 <h2>Track Your Speed with Precision</h2>
-                <p>SpeedLap brings professional-grade speed tracking to your iPhone. Whether you're on a track day, testing your car's performance, or just want accurate speed data, SpeedLap delivers the precision and features you need.</p>
+                <p style="margin-bottom: 2rem;">SpeedLap brings professional-grade speed tracking and comprehensive fuel management to your iPhone. Whether you're on a track day, testing your car's performance, managing multiple vehicles, or analyzing fuel consumption patterns, SpeedLap delivers the precision and features you need.</p>
+                <div>
+                    <a href="https://apps.apple.com/app/speedlap/id6749648704" class="btn" style="background: var(--primary-color); color: white; display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2.5rem; text-decoration: none; border-radius: var(--border-radius); font-weight: 600; font-size: 1.1rem; transition: var(--transition);">
+                        <i class="fab fa-apple"></i>
+                        Available on the App Store
+                    </a>
+                </div>
             </div>
         </div>
     </section>
@@ -675,7 +767,7 @@
         <div class="container">
             <div class="section-title">
                 <h2>Core Features</h2>
-                <p>Everything you need for professional speed tracking and lap timing, all in one intuitive iOS app.</p>
+                <p>Everything you need for professional speed tracking, lap timing, and comprehensive fuel management, all in one intuitive iOS app.</p>
             </div>
 
             <div class="features-grid">
@@ -684,7 +776,7 @@
                         <i class="fas fa-tachometer-alt"></i>
                     </div>
                     <h3>Real-time Speed Tracking</h3>
-                    <p>Live current speed display with instant updates. Real-time average speed calculation for each section with clear color coding.</p>
+                    <p>Live current speed display with instant updates. Switch between MPH and KM/H with color-coded displays - green for current speed, orange for average.</p>
                 </div>
 
                 <div class="feature-card">
@@ -705,10 +797,26 @@
 
                 <div class="feature-card">
                     <div class="feature-icon">
+                        <i class="fas fa-gas-pump"></i>
+                    </div>
+                    <h3>Vehicle & Fuel Management</h3>
+                    <p>Track fuel consumption, costs, and efficiency across multiple vehicles. Store detailed fuel entries with odometer readings, prices, and efficiency analytics.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
+                    <h3>Visual Analytics & Export</h3>
+                    <p>Built-in charts show efficiency trends and spending patterns. Export everything to CSV, JSON, or direct SQLite database access for power users.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
                     <h3>Comprehensive Data Logging</h3>
-                    <p>31+ data points per GPS record with accelerometer, gyroscope, and G-force measurements. Professional CSV export included.</p>
+                    <p>31+ data points per GPS record with accelerometer, gyroscope, and G-force measurements. Import existing data from JSON format.</p>
                 </div>
             </div>
         </div>
@@ -719,7 +827,7 @@
         <div class="container">
             <div class="section-title">
                 <h2>What's Included</h2>
-                <p>SpeedLap provides a comprehensive suite of features for professional speed tracking and data analysis.</p>
+                <p>SpeedLap provides a comprehensive suite of features for professional speed tracking, fuel management, and detailed data analysis.</p>
             </div>
 
             <div class="tech-features">
@@ -732,7 +840,7 @@
                         <li>Large speed displays with clear color coding</li>
                         <li>Real-time updates every 0.1 seconds</li>
                         <li>Clean, driver-focused design</li>
-                        <li>Tab navigation between tracking, history, data, and settings</li>
+                        <li>Tab navigation between tracking, fuel, history, data, and settings</li>
                     </ul>
                 </div>
 
@@ -764,14 +872,27 @@
 
                 <div class="tech-card">
                     <h4>
-                        <i class="fas fa-share-alt icon"></i>
-                        Export & Sharing
+                        <i class="fas fa-gas-pump icon"></i>
+                        Fuel Management System
                     </h4>
                     <ul>
-                        <li>Complete CSV export with all sensor data</li>
-                        <li>Professional formatting for analysis tools</li>
-                        <li>iOS share integration</li>
-                        <li>Millisecond-precision timestamps</li>
+                        <li>Multi-vehicle fuel tracking with detailed analytics</li>
+                        <li>Efficiency trends and cost analysis with visual charts</li>
+                        <li>Import existing fuel data from JSON format</li>
+                        <li>Track odometer readings, prices, and station locations</li>
+                    </ul>
+                </div>
+
+                <div class="tech-card">
+                    <h4>
+                        <i class="fas fa-share-alt icon"></i>
+                        Data Import & Export
+                    </h4>
+                    <ul>
+                        <li>Export to CSV, JSON, or direct SQLite database access</li>
+                        <li>Import existing fuel and tracking data</li>
+                        <li>Use <a href="speedlap-insights.html" style="color: var(--primary-color);">SpeedLap Insights</a> for browser-based analysis</li>
+                        <li>Complete data ownership and portability</li>
                     </ul>
                 </div>
             </div>
@@ -799,6 +920,14 @@
                     <h4><i class="fas fa-calculator" style="margin-right: 0.5rem;"></i>Vehicle Dynamics</h4>
                     <p>Professional vehicle dynamics analysis</p>
                 </div>
+                <div class="perfect-item">
+                    <h4><i class="fas fa-gas-pump" style="margin-right: 0.5rem;"></i>Fleet Management</h4>
+                    <p>Multi-vehicle fuel tracking and cost analysis</p>
+                </div>
+                <div class="perfect-item">
+                    <h4><i class="fas fa-chart-line" style="margin-right: 0.5rem;"></i>Fuel Efficiency Analysis</h4>
+                    <p>Track consumption patterns and optimize costs</p>
+                </div>
             </div>
         </div>
     </section>
@@ -820,7 +949,7 @@
                         <i class="fas fa-lock"></i>
                     </div>
                     <h3>Privacy Protected</h3>
-                    <p>Your data stays on your device. SpeedLap doesn't send your location or driving data anywhere - everything is stored locally and only shared when you choose to export it.</p>
+                    <p>Your data stays completely under your control. All data is stored locally using SQLite with optional iCloud sync to your personal account only. Use <a href="speedlap-insights.html" style="color: var(--primary-color);">SpeedLap Insights</a> to analyze your exported CSV data locally in your browser.</p>
                 </div>
             </div>
         </div>
@@ -849,10 +978,16 @@
         <div class="container">
             <h2>Download SpeedLap Today</h2>
             <p>Start tracking your performance with professional precision</p>
-            <a href="https://apps.apple.com/app/speedlap/id6749648704" class="btn">
-                <i class="fab fa-apple"></i>
-                Available on the App Store
-            </a>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="https://apps.apple.com/app/speedlap/id6749648704" class="btn">
+                    <i class="fab fa-apple"></i>
+                    Available on the App Store
+                </a>
+                <a href="speedlap-insights.html" class="btn btn-outline-light">
+                    <i class="fas fa-chart-line"></i>
+                    Analyze Your Data
+                </a>
+            </div>
         </div>
     </section>
 
