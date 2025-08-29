@@ -443,6 +443,17 @@
 
         <!-- Data Section -->
         <div id="dataSection" class="data-section">
+            <!-- Unit Preference Toggle -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0">SpeedLap Data Analysis</h4>
+                <div class="btn-group" role="group" aria-label="Speed unit preference">
+                    <input type="radio" class="btn-check" name="speedUnit" id="unitMph" value="mph" checked>
+                    <label class="btn btn-outline-primary" for="unitMph">MPH</label>
+                    <input type="radio" class="btn-check" name="speedUnit" id="unitKmh" value="kmh">
+                    <label class="btn btn-outline-primary" for="unitKmh">km/h</label>
+                </div>
+            </div>
+
             <!-- Navigation Tabs -->
             <ul class="nav nav-tabs mb-4" id="dashboardTabs" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -534,7 +545,7 @@
                                 <div class="card-body">
                                     <h6 class="text-muted">Average Speed</h6>
                                     <div class="stat-value" id="avgSpeed">0</div>
-                                    <small class="text-muted">MPH</small>
+                                    <small class="text-muted" id="avgSpeedUnit">MPH</small>
                                 </div>
                             </div>
                         </div>
@@ -543,7 +554,7 @@
                                 <div class="card-body">
                                     <h6 class="text-muted">Max Speed</h6>
                                     <div class="stat-value" id="maxSpeed">0</div>
-                                    <small class="text-muted">MPH</small>
+                                    <small class="text-muted" id="maxSpeedUnit">MPH</small>
                                 </div>
                             </div>
                         </div>
@@ -605,16 +616,7 @@
                                 <div class="card-body">
                                     <h6 class="text-muted">Total Distance Traveled</h6>
                                     <div class="stat-value" id="totalDistance">0</div>
-                                    <small class="text-muted">kilometers</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="card stat-card">
-                                <div class="card-body">
-                                    <h6 class="text-muted">Average Speed</h6>
-                                    <div class="stat-value" id="avgSpeedKmh">0</div>
-                                    <small class="text-muted">km/h</small>
+                                    <small class="text-muted" id="totalDistanceUnit">kilometers</small>
                                 </div>
                             </div>
                         </div>
@@ -627,7 +629,7 @@
                     <div class="filter-container mb-4">
                         <div class="row">
                             <div class="col-md-4">
-                                <label for="speedFilter" class="form-label">Filter by Speed (MPH)</label>
+                                <label for="speedFilter" class="form-label" id="speedFilterLabel">Filter by Speed (MPH)</label>
                                 <div class="input-group">
                                     <input type="number" class="form-control" id="minSpeed" placeholder="Min">
                                     <span class="input-group-text">to</span>
@@ -663,7 +665,7 @@
                                             <th>Latitude</th>
                                             <th>Longitude</th>
                                             <th>Altitude (m)</th>
-                                            <th>Speed (MPH)</th>
+                                            <th id="speedColumnHeader">Speed (MPH)</th>
                                             <th>Course (°)</th>
                                             <th>H. Accuracy (m)</th>
                                             <th>Total G-Force</th>
@@ -742,7 +744,7 @@
                             <div class="col-md-4">
                                 <div class="card">
                                     <div class="card-body gauge-container">
-                                        <div class="gauge-title">Speed (MPH)</div>
+                                        <div class="gauge-title" id="speedGaugeTitle">Speed (MPH)</div>
                                         <canvas id="speedometer" width="250" height="250"></canvas>
                                         <div class="mt-2">
                                             <h4 id="speedValue">0</h4>
@@ -918,6 +920,8 @@
         let animationInterval = null;
         let previousAltitude = null;
         let previousTime = null;
+        let sourceDataSpeedUnit = 'mph'; // Unit of speed data in CSV (detected or configured)
+        let currentSpeedUnit = 'mph'; // Current display unit preference
 
         // Initialize Leaflet map
         function initializeMap() {
@@ -949,35 +953,45 @@
             }
         });
 
-        // Drag and drop functionality
-        const uploadArea = document.querySelector('.upload-area');
-        
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
-            uploadArea.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-secondary').trim();
-        });
-
-        uploadArea.addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            uploadArea.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim();
-            uploadArea.style.backgroundColor = 'transparent';
-        });
-
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim();
-            uploadArea.style.backgroundColor = 'transparent';
+        // Initialize drag and drop functionality when DOM is ready
+        function initializeDragAndDrop() {
+            const uploadArea = document.querySelector('.upload-area');
             
-            const file = e.dataTransfer.files[0];
-            if (file && file.name.endsWith('.csv')) {
-                document.getElementById('csvFile').files = e.dataTransfer.files;
-                const event = new Event('change', { bubbles: true });
-                document.getElementById('csvFile').dispatchEvent(event);
+            if (!uploadArea) {
+                console.error('Upload area not found');
+                return;
             }
-        });
+            
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
+                uploadArea.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-secondary').trim();
+            });
+
+            uploadArea.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim();
+                uploadArea.style.backgroundColor = 'transparent';
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim();
+                uploadArea.style.backgroundColor = 'transparent';
+                
+                const file = e.dataTransfer.files[0];
+                if (file && file.name.endsWith('.csv')) {
+                    document.getElementById('csvFile').files = e.dataTransfer.files;
+                    const event = new Event('change', { bubbles: true });
+                    document.getElementById('csvFile').dispatchEvent(event);
+                }
+            });
+        }
 
         function processData() {
+            // Detect source data speed unit first
+            detectSourceSpeedUnit();
+            
             // Calculate statistics
             const stats = calculateStatistics();
             updateStatistics(stats);
@@ -992,6 +1006,12 @@
             
             // Initialize DataTable
             initializeDataTable();
+            
+            // Initialize telemetry display
+            initializeTelemetry();
+            
+            // Update all displays to ensure consistent units
+            updateAllSpeedDisplays();
         }
 
         function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -1028,20 +1048,23 @@
                 }
             }
             
-            const avgSpeedMPH = speeds.reduce((a, b) => a + b, 0) / speeds.length;
-            const maxSpeedMPH = Math.max(...speeds);
-            // Convert MPH to m/s for calculations (1 MPH = 0.44704 m/s)
+            const avgSpeedSource = speeds.reduce((a, b) => a + b, 0) / speeds.length;
+            const maxSpeedSource = Math.max(...speeds);
+            // Convert speeds from source unit to current display unit
+            const avgSpeedDisplay = convertSpeed(avgSpeedSource, sourceDataSpeedUnit, currentSpeedUnit);
+            const maxSpeedDisplay = convertSpeed(maxSpeedSource, sourceDataSpeedUnit, currentSpeedUnit);
+            // Convert to MPH first, then to m/s for backward compatibility (1 MPH = 0.44704 m/s)
+            const avgSpeedMPH = convertSpeed(avgSpeedSource, sourceDataSpeedUnit, 'mph');
+            const maxSpeedMPH = convertSpeed(maxSpeedSource, sourceDataSpeedUnit, 'mph');
             const avgSpeedMS = avgSpeedMPH * 0.44704;
             const maxSpeedMS = maxSpeedMPH * 0.44704;
-            // Convert MPH to km/h (1 MPH = 1.60934 km/h)
-            const avgSpeedKmh = avgSpeedMPH * 1.60934;
             
             return {
                 totalRecords: gpsData.length,
                 avgSpeed: avgSpeedMS,  // m/s for backward compatibility
-                avgSpeedMPH: avgSpeedMPH,  // MPH for display
+                avgSpeedDisplay: avgSpeedDisplay,  // Current unit for display
                 maxSpeed: maxSpeedMS,  // m/s for backward compatibility
-                maxSpeedMPH: maxSpeedMPH,  // MPH for display
+                maxSpeedDisplay: maxSpeedDisplay,  // Current unit for display
                 duration: durationMinutes,
                 minAltitude: Math.min(...altitudes),
                 maxAltitude: Math.max(...altitudes),
@@ -1049,22 +1072,28 @@
                 avgAccuracy: accuracies.reduce((a, b) => a + b, 0) / accuracies.length,
                 dataPointsPerMinute: durationMinutes > 0 ? gpsData.length / durationMinutes : 0,
                 totalDistance: totalDistance,
-                avgSpeedKmh: avgSpeedKmh
+                totalDistanceDisplay: convertDistance(totalDistance, 'km', getDistanceUnit(currentSpeedUnit))
             };
+        }
+
+        function getDistanceUnit(speedUnit) {
+            return speedUnit === 'mph' ? 'miles' : 'km';
         }
 
         function updateStatistics(stats) {
             document.getElementById('totalRecords').textContent = stats.totalRecords.toLocaleString();
-            document.getElementById('avgSpeed').textContent = stats.avgSpeedMPH.toFixed(2);
-            document.getElementById('maxSpeed').textContent = stats.maxSpeedMPH.toFixed(2);
+            document.getElementById('avgSpeed').textContent = stats.avgSpeedDisplay.toFixed(2);
+            document.getElementById('maxSpeed').textContent = stats.maxSpeedDisplay.toFixed(2);
+            document.getElementById('avgSpeedUnit').textContent = getSpeedUnitLabel(currentSpeedUnit);
+            document.getElementById('maxSpeedUnit').textContent = getSpeedUnitLabel(currentSpeedUnit);
             document.getElementById('duration').textContent = stats.duration.toFixed(1);
             document.getElementById('altitudeRange').textContent = 
                 (stats.maxAltitude - stats.minAltitude).toFixed(1);
             document.getElementById('maxGForce').textContent = stats.maxGForce.toFixed(3);
             document.getElementById('avgAccuracy').textContent = stats.avgAccuracy.toFixed(1);
             document.getElementById('dataPoints').textContent = stats.dataPointsPerMinute.toFixed(1);
-            document.getElementById('totalDistance').textContent = stats.totalDistance.toFixed(2);
-            document.getElementById('avgSpeedKmh').textContent = stats.avgSpeedKmh.toFixed(1);
+            document.getElementById('totalDistance').textContent = stats.totalDistanceDisplay.toFixed(2);
+            document.getElementById('totalDistanceUnit').textContent = getDistanceUnit(currentSpeedUnit);
         }
 
         function getSpeedColor(speed, maxSpeed) {
@@ -1104,10 +1133,11 @@
                         });
                         
                         // Add popup with details
+                        const displaySpeed = point.speed ? convertSpeed(point.speed, sourceDataSpeedUnit, currentSpeedUnit) : 0;
                         marker.bindPopup(`
                             <b>Point ${index + 1}</b><br>
                             Time: ${point.timestamp}<br>
-                            Speed: ${point.speed?.toFixed(2)} MPH<br>
+                            Speed: ${displaySpeed.toFixed(2)} ${getSpeedUnitLabel(currentSpeedUnit)}<br>
                             Altitude: ${point.altitude?.toFixed(1)} m<br>
                             Accuracy: ${point.horizontal_accuracy?.toFixed(1)} m<br>
                             G-Force: ${point.total_g_force?.toFixed(3)} g
@@ -1188,7 +1218,11 @@
                     { data: 'latitude', render: (data) => data ? data.toFixed(6) : '' },
                     { data: 'longitude', render: (data) => data ? data.toFixed(6) : '' },
                     { data: 'altitude', render: (data) => data ? data.toFixed(1) : '' },
-                    { data: 'speed', render: (data) => data ? data.toFixed(2) : '' },
+                    { data: 'speed', render: (data) => {
+                        if (!data) return '';
+                        const convertedSpeed = convertSpeed(data, sourceDataSpeedUnit, currentSpeedUnit);
+                        return convertedSpeed.toFixed(2);
+                    }},
                     { data: 'course', render: (data) => data ? data.toFixed(1) : '' },
                     { data: 'horizontal_accuracy', render: (data) => data ? data.toFixed(1) : '' },
                     { data: 'total_g_force', render: (data) => data ? data.toFixed(3) : '' },
@@ -1208,11 +1242,15 @@
             const minAlt = parseFloat(document.getElementById('minAltitude').value) || -Infinity;
             const maxAlt = parseFloat(document.getElementById('maxAltitude').value) || Infinity;
             
+            // Convert user input speeds back to source data unit for comparison
+            const minSpeedSource = convertSpeed(minSpeed, currentSpeedUnit, sourceDataSpeedUnit);
+            const maxSpeedSource = convertSpeed(maxSpeed, currentSpeedUnit, sourceDataSpeedUnit);
+            
             $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-                const speed = parseFloat(data[4]) || 0;
+                const originalSpeed = gpsData[dataIndex]?.speed || 0;
                 const altitude = parseFloat(data[3]) || 0;
                 
-                return speed >= minSpeed && speed <= maxSpeed && 
+                return originalSpeed >= minSpeedSource && originalSpeed <= maxSpeedSource && 
                        altitude >= minAlt && altitude <= maxAlt;
             });
             
@@ -1252,12 +1290,12 @@ Generated: ${new Date().toLocaleString()}
 Dataset Overview:
 - Total Records: ${stats.totalRecords}
 - Duration: ${stats.duration.toFixed(1)} minutes
-- Total Distance: ${stats.totalDistance.toFixed(2)} km
+- Total Distance: ${stats.totalDistanceDisplay.toFixed(2)} ${getDistanceUnit(currentSpeedUnit)}
 - Data Points per Minute: ${stats.dataPointsPerMinute.toFixed(1)}
 
 Speed Statistics:
-- Average Speed: ${stats.avgSpeedMPH.toFixed(2)} MPH (${stats.avgSpeedKmh.toFixed(1)} km/h)
-- Maximum Speed: ${stats.maxSpeedMPH.toFixed(2)} MPH (${(stats.maxSpeedMPH * 1.60934).toFixed(1)} km/h)
+- Average Speed: ${stats.avgSpeedDisplay.toFixed(2)} ${getSpeedUnitLabel(currentSpeedUnit)}
+- Maximum Speed: ${stats.maxSpeedDisplay.toFixed(2)} ${getSpeedUnitLabel(currentSpeedUnit)}
 
 Altitude Information:
 - Minimum Altitude: ${stats.minAltitude.toFixed(1)} m
@@ -1353,8 +1391,9 @@ Filtered Results:
                 }
             }
             
-            // Update all gauges
-            drawSpeedometer(point.speed || 0);
+            // Update all gauges (convert speed for display)
+            const displaySpeed = convertSpeed(point.speed || 0, sourceDataSpeedUnit, currentSpeedUnit);
+            drawSpeedometer(displaySpeed);
             drawGForce(point.accel_x || 0, point.accel_y || 0, point.accel_z || 0, point.total_g_force || 0);
             drawCompass(point.course || 0);
             drawPitchIndicator(point.pitch || 0);
@@ -1362,8 +1401,8 @@ Filtered Results:
             drawYawIndicator(point.yaw || 0, vSpeed);
             
             // Update text values
-            document.getElementById('speedValue').textContent = (point.speed || 0).toFixed(0);
-            document.getElementById('speedText').textContent = `${(point.speed || 0).toFixed(1)} MPH`;
+            document.getElementById('speedValue').textContent = displaySpeed.toFixed(0);
+            document.getElementById('speedText').textContent = `${displaySpeed.toFixed(1)} ${getSpeedUnitLabel(currentSpeedUnit)}`;
             document.getElementById('headingValue').textContent = `${Math.round(point.course || 0)}°`;
             document.getElementById('headingText').textContent = getCompassDirection(point.course || 0);
             document.getElementById('pitchValue').textContent = (point.pitch || 0).toFixed(1);
@@ -1398,8 +1437,8 @@ Filtered Results:
             ctx.lineWidth = 3;
             ctx.stroke();
             
-            // Draw speed arc
-            const maxSpeed = 200; // Max speed on gauge
+            // Draw speed arc (adjust max speed based on current display unit)
+            const maxSpeed = currentSpeedUnit === 'mph' ? 200 : 320; // MPH or km/h
             const startAngle = 0.75 * Math.PI;
             const endAngle = 2.25 * Math.PI;
             const speedAngle = startAngle + (speed / maxSpeed) * (endAngle - startAngle);
@@ -1940,12 +1979,116 @@ Filtered Results:
             document.querySelector('.nav-menu').classList.toggle('active');
         });
 
-        // Update processData to initialize telemetry
-        const originalProcessData = processData;
-        processData = function() {
-            originalProcessData();
-            initializeTelemetry();
-        };
+        // Speed unit conversion functions
+        function mphToKmh(mph) {
+            return mph * 1.60934;
+        }
+
+        function kmhToMph(kmh) {
+            return kmh / 1.60934;
+        }
+
+        // Distance unit conversion functions
+        function kmToMiles(km) {
+            return km * 0.621371;
+        }
+
+        function milesToKm(miles) {
+            return miles / 0.621371;
+        }
+
+        function convertDistance(distance, fromUnit, toUnit) {
+            if (fromUnit === toUnit) return distance;
+            if (fromUnit === 'km' && toUnit === 'miles') return kmToMiles(distance);
+            if (fromUnit === 'miles' && toUnit === 'km') return milesToKm(distance);
+            return distance;
+        }
+
+
+        // Detect the unit of the source CSV data
+        function detectSourceSpeedUnit() {
+            const speeds = gpsData.map(d => d.speed).filter(s => s !== null && s > 0);
+            if (speeds.length === 0) return;
+            
+            const maxSpeed = Math.max(...speeds);
+            const avgSpeed = speeds.reduce((a, b) => a + b, 0) / speeds.length;
+            
+            // If max speed > 200 or average > 80, likely km/h
+            // Most GPS data in km/h shows highway speeds 100-130 km/h (62-81 mph)
+            if (maxSpeed > 200 || avgSpeed > 80) {
+                sourceDataSpeedUnit = 'kmh';
+                console.log('Detected source data speed unit: km/h (max:', maxSpeed.toFixed(1), ', avg:', avgSpeed.toFixed(1), ')');
+            } else {
+                sourceDataSpeedUnit = 'mph';
+                console.log('Detected source data speed unit: MPH (max:', maxSpeed.toFixed(1), ', avg:', avgSpeed.toFixed(1), ')');
+            }
+        }
+
+        function convertSpeed(speed, fromUnit, toUnit) {
+            if (fromUnit === toUnit) return speed;
+            if (fromUnit === 'mph' && toUnit === 'kmh') return mphToKmh(speed);
+            if (fromUnit === 'kmh' && toUnit === 'mph') return kmhToMph(speed);
+            return speed;
+        }
+
+        function getSpeedUnitLabel(unit) {
+            return unit === 'mph' ? 'MPH' : 'km/h';
+        }
+
+        // Speed unit toggle event handlers
+        document.getElementById('unitMph').addEventListener('change', function() {
+            if (this.checked) {
+                currentSpeedUnit = 'mph';
+                updateAllSpeedDisplays();
+            }
+        });
+
+        document.getElementById('unitKmh').addEventListener('change', function() {
+            if (this.checked) {
+                currentSpeedUnit = 'kmh';
+                updateAllSpeedDisplays();
+            }
+        });
+
+        function updateAllSpeedDisplays() {
+            if (gpsData.length === 0) return;
+            
+            console.log('Updating displays - Source unit:', sourceDataSpeedUnit, 'Display unit:', currentSpeedUnit);
+            
+            // Update statistics
+            const stats = calculateStatistics();
+            updateStatistics(stats);
+            
+            // Update table column header
+            document.getElementById('speedColumnHeader').textContent = 
+                `Speed (${getSpeedUnitLabel(currentSpeedUnit)})`;
+            
+            // Update filter label
+            document.getElementById('speedFilterLabel').textContent = 
+                `Filter by Speed (${getSpeedUnitLabel(currentSpeedUnit)})`;
+            
+            // Update telemetry gauge title
+            document.getElementById('speedGaugeTitle').textContent = 
+                `Speed (${getSpeedUnitLabel(currentSpeedUnit)})`;
+            
+            // Refresh DataTable to show converted values
+            if (dataTable) {
+                dataTable.draw();
+            }
+            
+            // Update current telemetry display if in telemetry tab
+            updateTelemetryDisplay();
+        }
+
+        // Initialize page on load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default unit preference
+            document.getElementById('unitMph').checked = true;
+            currentSpeedUnit = 'mph';
+            
+            // Initialize drag and drop
+            initializeDragAndDrop();
+        });
     </script>
 </body>
 </html>
