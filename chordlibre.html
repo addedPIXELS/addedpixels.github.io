@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChordLibre • addedPIXELS</title>
-    <meta name="description" content="PDF chord sheet manager for musicians. Import, organise, and perform with your chord sheets. Fast, reliable, distraction-free for iOS.">
+    <meta name="description" content="Create, manage, and perform with your chord sheets. Native .chordlibre format with transposition, built-in editor, and seamless sharing. Fast, reliable, distraction-free for iOS.">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -807,6 +807,7 @@
                             <li><a href="speedlap.html" class="dropdown-link">SpeedLap</a></li>
                             <li><a href="speedlap-insights.html" class="dropdown-link">SpeedLap Insights</a></li>
                             <li><a href="chordlibre.html" class="dropdown-link active">ChordLibre</a></li>
+                            <li><a href="chordlibre-editor.html" class="dropdown-link">ChordLibre Web Editor</a></li>
                         </ul>
                     </li>
                     <li><a href="index.html#team" class="nav-link">Team</a></li>
@@ -825,13 +826,17 @@
             <div class="hero-content">
                 <img src="images/chordlibrelogo.png" alt="ChordLibre app icon" class="app-icon" width="120" height="120">
                 <h1>ChordLibre</h1>
-                <p class="subtitle">PDF chord sheet manager for musicians</p>
+                <p class="subtitle">Create, manage, and perform with your chord sheets</p>
                 <p class="value-statement">Import, organise, and perform with your chord sheets. Fast, reliable, distraction-free.</p>
-                
+
                 <div class="cta-buttons">
                     <a href="https://apps.apple.com/us/app/chordlibre/id6751736157" class="btn" aria-label="Download ChordLibre on the App Store">
                         <i class="fab fa-apple"></i>
                         Download on the App Store
+                    </a>
+                    <a href="chordlibre-editor.html" class="btn btn-outline">
+                        <i class="fas fa-edit"></i>
+                        Web Editor
                     </a>
                     <a href="https://github.com/addedPIXELS/ChordLibre" class="btn btn-outline" target="_blank" rel="noopener noreferrer">
                         <i class="fab fa-github"></i>
@@ -885,10 +890,18 @@
             <div class="features-grid">
                 <div class="feature-group">
                     <h3>
-                        <i class="fas fa-download icon"></i>
-                        Effortless Import
+                        <i class="fas fa-file-alt icon"></i>
+                        Native ChordLibre Format
                     </h3>
-                    <p>Import PDFs from Files, Mail, or other apps. Automatic filename parsing extracts song titles and artists. Quick metadata edits keep your library organised.</p>
+                    <p>Create and edit chord sheets in native .chordlibre format with full chord notation support. Import PDFs or native files from Files, Mail, or any app.</p>
+                </div>
+
+                <div class="feature-group">
+                    <h3>
+                        <i class="fas fa-edit icon"></i>
+                        Built-in Chordsheet Editor
+                    </h3>
+                    <p>Full-screen editor for creating and editing native chordsheets. Structure songs with sections and lines. Add lyrics and space-separated chords.</p>
                 </div>
 
                 <div class="feature-group">
@@ -901,10 +914,26 @@
 
                 <div class="feature-group">
                     <h3>
+                        <i class="fas fa-exchange-alt icon"></i>
+                        Transpose & Capo Support
+                    </h3>
+                    <p>Intelligent chord transposition engine. Change keys instantly. Set capo position and see transposed chords. Works with major, minor, and extended chords.</p>
+                </div>
+
+                <div class="feature-group">
+                    <h3>
                         <i class="fas fa-expand-arrows-alt icon"></i>
                         Performance Mode
                     </h3>
                     <p>Full-screen PDFs for maximum readability. Swipe between setlist songs. Screen stays awake during performance. Clean, distraction-free interface.</p>
+                </div>
+
+                <div class="feature-group">
+                    <h3>
+                        <i class="fas fa-share-alt icon"></i>
+                        Export & Share
+                    </h3>
+                    <p>Export individual chordsheets or entire setlists. Share with band members via .chordlibre and .chordlibresetlist files. System-wide import from any app with share extension.</p>
                 </div>
 
                 <div class="feature-group">
@@ -921,14 +950,6 @@
                         Thoughtful Details
                     </h3>
                     <p>Tips banner with helpful guidance. Optional one-time tip jar (£0.99) to remove tips and support development. Native iOS feel throughout.</p>
-                </div>
-
-                <div class="feature-group">
-                    <h3>
-                        <i class="fas fa-share-alt icon"></i>
-                        Seamless Sharing
-                    </h3>
-                    <p>Standard iOS sharing capabilities. Export individual songs or entire setlists. Share with band members or back up your library with ease.</p>
                 </div>
             </div>
         </div>
@@ -1003,6 +1024,26 @@
 
             <div class="faq-grid">
                 <div class="faq-item">
+                    <h4>What is the .chordlibre format?</h4>
+                    <p>ChordLibre uses an open JSON format for storing chordsheets with sections, lyrics, and chord notation. You can create, edit, and share .chordlibre files using the iOS app or our free web editor.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h4>Can I create chord sheets in the app?</h4>
+                    <p>Yes! ChordLibre includes a built-in chordsheet editor. Create songs from scratch with sections and lines, add chords and lyrics, and transpose to any key.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h4>How do I transpose songs?</h4>
+                    <p>Use the transposition controls to change the key of any native chordsheet. The intelligent engine handles major, minor, slash chords, and chord extensions automatically.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h4>How do I share setlists with my band?</h4>
+                    <p>Export individual chordsheets (.chordlibre) or entire setlists (.chordlibresetlist) and share via standard iOS sharing. Recipients can import directly into their ChordLibre app.</p>
+                </div>
+
+                <div class="faq-item">
                     <h4>Does it work offline?</h4>
                     <p>Yes—all your chord sheets are stored locally on your device. No internet connection required for viewing or managing your library.</p>
                 </div>
@@ -1040,6 +1081,22 @@
         <div class="container">
             <div class="section-title">
                 <h2>What's New</h2>
+            </div>
+
+            <div class="version-card" style="margin-bottom: 2rem;">
+                <div class="version-header">
+                    <span class="version-badge">v1.1+</span>
+                    <h3>Recent Updates</h3>
+                    <span class="date" style="margin-left: auto; color: var(--text-secondary); font-size: 0.9rem;">Latest</span>
+                </div>
+                <ul class="feature-list">
+                    <li><strong>Native ChordLibre Format</strong> - Create and edit chordsheets with native .chordlibre JSON format</li>
+                    <li><strong>Chordsheet Editor</strong> - Full-screen editor for building songs from scratch</li>
+                    <li><strong>Transposition Engine</strong> - Intelligent key changes with capo support</li>
+                    <li><strong>Export & Import</strong> - Share individual chordsheets or entire setlists</li>
+                    <li><strong>Share Extension</strong> - Import to ChordLibre from any app system-wide</li>
+                    <li><strong>Multiple Chord Support</strong> - Enhanced chord notation and editing</li>
+                </ul>
             </div>
 
             <div class="version-card">
