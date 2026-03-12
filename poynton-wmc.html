@@ -1453,18 +1453,21 @@
             }
         });
 
-        // Lazy-load videos when they enter the viewport
+        // Lazy-load and autoplay videos when they scroll into view
         if ('IntersectionObserver' in window) {
             const videoObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         const video = entry.target.querySelector('video');
+                        const overlay = entry.target.querySelector('.play-overlay');
                         if (video) {
                             video.querySelectorAll('source[data-src]').forEach(source => {
                                 source.src = source.dataset.src;
                                 source.removeAttribute('data-src');
                             });
                             video.load();
+                            video.play();
+                            if (overlay) overlay.style.display = 'none';
                         }
                         videoObserver.unobserve(entry.target);
                     }
@@ -1476,20 +1479,19 @@
             });
         }
 
-        // Video play on click
+        // Video toggle play/pause on click
         document.querySelectorAll('.video-placeholder').forEach(wrapper => {
             wrapper.addEventListener('click', function() {
                 const video = this.querySelector('video');
                 const overlay = this.querySelector('.play-overlay');
                 if (video) {
-                    // Ensure sources are loaded
-                    video.querySelectorAll('source[data-src]').forEach(source => {
-                        source.src = source.dataset.src;
-                        source.removeAttribute('data-src');
-                    });
-                    video.load();
-                    video.play();
-                    if (overlay) overlay.style.display = 'none';
+                    if (video.paused) {
+                        video.play();
+                        if (overlay) overlay.style.display = 'none';
+                    } else {
+                        video.pause();
+                        if (overlay) overlay.style.display = '';
+                    }
                 }
             });
         });
