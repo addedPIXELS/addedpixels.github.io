@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShowControl • addedPIXELS</title>
+    <meta name="description" content="ShowControl – bespoke web-based lighting control software by addedPIXELS. Professional lighting without needing a professional operator. Built on Art-Net, controlled from any browser.">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://addedpixels.com/showcontrol">
+    <meta property="og:title" content="ShowControl – Bespoke Lighting Control Software">
+    <meta property="og:description" content="Professional lighting, without needing a professional. And when a professional does show up, everything they need is right there.">
+
+    <link rel="shortcut icon" type="image/png" href="images/logos/addedpixels_favicon_dark.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        :root {
+            --primary-color: rgb(76, 175, 80);
+            --primary-dark: rgb(56, 142, 60);
+            --primary-light: rgb(129, 199, 132);
+            --accent-color: #4caf50;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-light: #6e7681;
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #1c2333;
+            --bg-card: #161b22;
+            --border-color: #30363d;
+            --border-primary: rgba(76, 175, 80, 0.3);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.2);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+            --shadow-primary: 0 10px 15px -3px rgba(76, 175, 80, 0.15);
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+        }
+
+        .section-header {
+            margin-bottom: 3rem;
+        }
+
+        .section-header.center {
+            text-align: center;
+        }
+
+        .section-header.center .section-subtitle {
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(13, 17, 23, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .nav-dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--bg-secondary);
+            min-width: 200px;
+            box-shadow: var(--shadow-lg);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: var(--transition);
+            z-index: 1000;
+            list-style: none;
+            padding: 0.5rem 0;
+            margin: 0;
+        }
+
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-link {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .dropdown-link:hover,
+        .dropdown-link.active {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--primary-color);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 10rem 0 5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(ellipse at 50% 0%, rgba(76, 175, 80, 0.08) 0%, transparent 60%);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(76, 175, 80, 0.15);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.25rem;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 2rem;
+            background: var(--primary-color);
+            color: #fff;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 1rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-primary);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: rgba(76, 175, 80, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-sm {
+            padding: 0.6rem 1.25rem;
+            font-size: 0.9rem;
+        }
+
+        /* Problem Section */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .problem-text h3 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .problem-text p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .problem-visual {
+            display: grid;
+            gap: 1.25rem;
+        }
+
+        .problem-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .problem-card .icon {
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .problem-card .icon.red {
+            background: rgba(248, 81, 73, 0.15);
+            color: #f85149;
+        }
+
+        .problem-card .icon.green {
+            background: rgba(76, 175, 80, 0.15);
+            color: var(--primary-color);
+        }
+
+        .problem-card h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .problem-card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* How It Works */
+        .how-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .how-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .how-card .step-number {
+            width: 48px;
+            height: 48px;
+            background: rgba(76, 175, 80, 0.15);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0 auto 1.25rem;
+        }
+
+        .how-card h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .how-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .how-card .tech-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-light);
+            background: rgba(255,255,255,0.05);
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+        }
+
+        /* Interface Walkthrough */
+        .interface-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .interface-tab {
+            padding: 0.65rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 100px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .interface-tab:hover {
+            border-color: var(--border-primary);
+            color: var(--text-primary);
+        }
+
+        .interface-tab.active {
+            background: rgba(76, 175, 80, 0.15);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .interface-panel {
+            display: none;
+        }
+
+        .interface-panel.active {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .interface-screenshot {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .interface-screenshot img {
+            width: 100%;
+            display: block;
+        }
+
+        .interface-info h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .interface-info .tab-label {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.3rem 0.7rem;
+            border-radius: 6px;
+            background: rgba(76, 175, 80, 0.15);
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .interface-info p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .interface-info .usage-note {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* Capabilities */
+        .capabilities-section {
+            display: grid;
+            gap: 3rem;
+        }
+
+        .capability-group {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+        }
+
+        .capability-group-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .capability-group-header .icon-wrap {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .capability-group-header .icon-wrap i {
+            font-size: 1.25rem;
+            color: #fff;
+        }
+
+        .capability-group-header h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .capability-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .capability-item {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+
+        .capability-item i {
+            color: var(--primary-color);
+            margin-top: 0.2rem;
+            flex-shrink: 0;
+        }
+
+        .capability-item strong {
+            display: block;
+            font-size: 0.95rem;
+            margin-bottom: 0.15rem;
+        }
+
+        .capability-item span {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Technical Foundation */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .tech-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .tech-card:hover {
+            border-color: var(--border-primary);
+        }
+
+        .tech-card .tech-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .tech-card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+        }
+
+        .tech-card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* What Makes It Different */
+        .different-content {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        .different-content p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1.25rem;
+        }
+
+        .different-content strong {
+            color: var(--text-primary);
+        }
+
+        .different-content .pullquote {
+            font-size: 1.35rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            border-left: 3px solid var(--primary-color);
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+            line-height: 1.5;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            padding: 5rem 0;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .cta-section h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 550px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Alternating section backgrounds */
+        .bg-alt {
+            background: var(--bg-secondary);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .footer-section a {
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-section small {
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-bottom p {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .footer-social a {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .footer-social a:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--bg-secondary);
+                border-bottom: 1px solid var(--border-color);
+                flex-direction: column;
+                padding: 1rem 1.5rem;
+                gap: 0;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .nav-menu li {
+                padding: 0.5rem 0;
+            }
+
+            .nav-dropdown .dropdown-menu {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                border: none;
+                background: transparent;
+                padding-left: 1rem;
+                min-width: auto;
+            }
+
+            .hero {
+                padding: 8rem 0 3rem;
+            }
+
+            .hero h1 {
+                font-size: 2.25rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.05rem;
+            }
+
+            .section {
+                padding: 3.5rem 0;
+            }
+
+            .section-title {
+                font-size: 1.85rem;
+            }
+
+            .problem-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .how-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .interface-panel.active {
+                grid-template-columns: 1fr;
+            }
+
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .capability-list {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .cta-section h2 {
+                font-size: 1.75rem;
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="container">
+            <div class="nav">
+                <a href="index.html" class="logo">
+                    <img src="images/logos/addedpixels_logo_standard_light.png" alt="addedPIXELS">
+                </a>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="about.html" class="nav-link">About</a></li>
+                    <li><a href="index.html#services" class="nav-link">Services</a></li>
+                    <li><a href="index.html#projects" class="nav-link">Projects</a></li>
+                    <li class="nav-dropdown">
+                        <a href="#" class="nav-link dropdown-toggle">Apps <i class="bi bi-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="speedlap.html" class="dropdown-link">SpeedLap</a></li>
+                            <li><a href="speedlap-insights.html" class="dropdown-link">SpeedLap Insights</a></li>
+                            <li><a href="chordlibre.html" class="dropdown-link">ChordLibre</a></li>
+                            <li><a href="chordlibre-editor.html" class="dropdown-link">ChordLibre Web Editor</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="index.html#team" class="nav-link">Team</a></li>
+                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+                <button class="mobile-menu-btn" aria-label="Toggle navigation menu">
+                    <i class="bi bi-list"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="bi bi-lightbulb"></i>
+                    Bespoke Lighting Software
+                </div>
+                <h1>Show<span class="highlight">Control</span></h1>
+                <p class="subtitle">Professional lighting, without needing a professional. And when a professional does show up, everything they need is right there.</p>
+                <div class="cta-buttons">
+                    <a href="poynton-wmc.html" class="btn">
+                        <i class="bi bi-building"></i>
+                        See it in action
+                    </a>
+                    <a href="index.html#contact" class="btn btn-outline">
+                        <i class="bi bi-envelope"></i>
+                        Get in touch
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Problem It Solves -->
+    <section class="section">
+        <div class="container">
+            <div class="problem-grid">
+                <div class="problem-text">
+                    <span class="section-label">The Problem</span>
+                    <h2 class="section-title">Intelligent lights, untrained operators</h2>
+                    <p>Most small-to-medium venues face a common challenge: they invest in modern intelligent lighting, but the people who run the venue day-to-day aren't lighting technicians.</p>
+                    <p>Traditional DMX desks are powerful but intimidating. Generic lighting apps are either too simple or too complex. There's nothing in the middle that actually fits how venues work.</p>
+                    <p><strong>ShowControl bridges this gap.</strong></p>
+                </div>
+                <div class="problem-visual fade-in">
+                    <div class="problem-card">
+                        <div class="icon red"><i class="bi bi-x-lg"></i></div>
+                        <div>
+                            <h4>Traditional DMX desks</h4>
+                            <p>Powerful but intimidating. Channel faders, cue stacks, programming modes – requires a trained operator.</p>
+                        </div>
+                    </div>
+                    <div class="problem-card">
+                        <div class="icon red"><i class="bi bi-x-lg"></i></div>
+                        <div>
+                            <h4>Generic lighting apps</h4>
+                            <p>Either too simple (just on/off) or too complex (another desk in disguise). Never designed for how venues actually work.</p>
+                        </div>
+                    </div>
+                    <div class="problem-card">
+                        <div class="icon green"><i class="bi bi-check-lg"></i></div>
+                        <div>
+                            <h4>ShowControl</h4>
+                            <p>Staff learn it in minutes. Visiting engineers connect with zero friction. Built for the venue, from the ground up.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section bg-alt">
+        <div class="container">
+            <div class="section-header center">
+                <span class="section-label">How It Works</span>
+                <h2 class="section-title">Simple architecture, powerful results</h2>
+                <p class="section-subtitle">ShowControl runs as a web application on a dedicated server at the venue. Any device with a browser can control the lights – nothing to install, no special hardware.</p>
+            </div>
+
+            <div class="how-grid">
+                <div class="how-card fade-in">
+                    <div class="step-number">1</div>
+                    <h3>Open a browser</h3>
+                    <p>On any device – iPad, phone, laptop – navigate to the ShowControl interface on the venue's network. No app to download.</p>
+                    <span class="tech-badge">Any modern browser</span>
+                </div>
+                <div class="how-card fade-in">
+                    <div class="step-number">2</div>
+                    <h3>Tap the look you want</h3>
+                    <p>Choose from curated scenes and programmes designed specifically for the venue. One tap for houselights, one tap for party mode.</p>
+                    <span class="tech-badge">35 frames per second</span>
+                </div>
+                <div class="how-card fade-in">
+                    <div class="step-number">3</div>
+                    <h3>Lights respond</h3>
+                    <p>ShowControl sends DMX data via Art-Net over the venue's network to an Art-Net node, which outputs DMX to the fixtures. Built-in smoothing prevents visible LED flicker while still allowing sharp effects like strobes to cut through.</p>
+                    <span class="tech-badge">Art-Net / DMX512</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interface Walkthrough -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header center">
+                <span class="section-label">The Interface</span>
+                <h2 class="section-title">Simple to advanced, one tab at a time</h2>
+                <p class="section-subtitle">The interface is organised into tabs that progress from simple one-tap operation to full fixture configuration.</p>
+            </div>
+
+            <div class="interface-tabs">
+                <button class="interface-tab active" data-tab="easy">Easy Mode</button>
+                <button class="interface-tab" data-tab="scenes">Scenes</button>
+                <button class="interface-tab" data-tab="programmes">Programmes</button>
+                <button class="interface-tab" data-tab="patch">Patch</button>
+                <button class="interface-tab" data-tab="config">Config</button>
+            </div>
+
+            <div class="interface-panel active" id="panel-easy">
+                <div class="interface-screenshot">
+                    <img src="https://placehold.co/800x500/1a1a2e/e0e0e0?text=Easy+Mode+Interface" alt="ShowControl Easy Mode – large, clearly labelled buttons for one-tap lighting control: Houselights, Cabaret, Music Mode, Party Mode">
+                </div>
+                <div class="interface-info">
+                    <span class="tab-label">Default View</span>
+                    <h3>Easy Mode</h3>
+                    <p>Large, clearly labelled buttons for the most common looks. One tap for houselights, one tap for party mode, one tap for music-reactive lighting. This is where staff spend 95% of their time.</p>
+                    <p class="usage-note">Includes master dimmer, blackout, and Live Mode auto-pilot toggle.</p>
+                </div>
+            </div>
+
+            <div class="interface-panel" id="panel-scenes">
+                <div class="interface-screenshot">
+                    <img src="https://placehold.co/800x500/1a1a2e/e0e0e0?text=Scenes+Grid+Interface" alt="ShowControl Scenes tab – grid of static lighting looks including colour washes, themed palettes, and house lights with crossfade controls">
+                </div>
+                <div class="interface-info">
+                    <span class="tab-label">Static Looks</span>
+                    <h3>Scenes</h3>
+                    <p>A grid of all available static looks – colour washes, palettes, themed scenes – with a fade time selector. Tap a scene, choose a crossfade duration, done.</p>
+                    <p class="usage-note">Includes themed palettes like sunset, ocean, forest, arctic, and fire.</p>
+                </div>
+            </div>
+
+            <div class="interface-panel" id="panel-programmes">
+                <div class="interface-screenshot">
+                    <img src="https://placehold.co/800x500/1a1a2e/e0e0e0?text=Programmes+Interface" alt="ShowControl Programmes tab – animated lighting effects with speed control, including disco sweeps, sound-to-light, and themed effects">
+                </div>
+                <div class="interface-info">
+                    <span class="tab-label">Animated Effects</span>
+                    <h3>Programmes</h3>
+                    <p>Animated lighting effects that run continuously – disco sweeps, colour chases, audio-reactive patterns, themed effects. Speed control lets operators dial the energy up or down.</p>
+                    <p class="usage-note">Sound-to-light programmes react in real time to the venue's audio.</p>
+                </div>
+            </div>
+
+            <div class="interface-panel" id="panel-patch">
+                <div class="interface-screenshot">
+                    <img src="https://placehold.co/800x500/1a1a2e/e0e0e0?text=Patch+Reference+Interface" alt="ShowControl Patch tab – complete fixture reference with DMX channel addresses, function descriptions, and value ranges for visiting lighting engineers">
+                </div>
+                <div class="interface-info">
+                    <span class="tab-label">For Professionals</span>
+                    <h3>Patch</h3>
+                    <p>A complete fixture reference showing every fixture in the rig with brand, model, DMX mode, channel addresses, and per-channel function descriptions with value ranges.</p>
+                    <p class="usage-note">This is the page a visiting engineer reads to patch into their own software. Includes fixture identify buttons.</p>
+                </div>
+            </div>
+
+            <div class="interface-panel" id="panel-config">
+                <div class="interface-screenshot">
+                    <img src="https://placehold.co/800x500/1a1a2e/e0e0e0?text=Config+Panel+Interface" alt="ShowControl Config tab – moving head calibration, sunstrip lock settings, zone management, and system status">
+                </div>
+                <div class="interface-info">
+                    <span class="tab-label">System Settings</span>
+                    <h3>Config</h3>
+                    <p>Moving head calibration, sunstrip lock settings, per-lamp control, zone management, and system status. The tools needed to fine-tune the installation for the physical space.</p>
+                    <p class="usage-note">Zone restriction prevents moving heads from pointing into the audience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Capabilities -->
+    <section class="section bg-alt">
+        <div class="container">
+            <div class="section-header center">
+                <span class="section-label">Capabilities</span>
+                <h2 class="section-title">Built for every user</h2>
+                <p class="section-subtitle">From the staff who need houselights to the touring engineer who wants full DMX control.</p>
+            </div>
+
+            <div class="capabilities-section">
+                <div class="capability-group fade-in">
+                    <div class="capability-group-header">
+                        <div class="icon-wrap"><i class="bi bi-hand-index-thumb"></i></div>
+                        <h3>For Day-to-Day Operation</h3>
+                    </div>
+                    <div class="capability-list">
+                        <div class="capability-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <div>
+                                <strong>One-tap presets</strong>
+                                <span>Staff select from curated looks designed for the venue</span>
+                            </div>
+                        </div>
+                        <div class="capability-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <div>
+                                <strong>Live Mode</strong>
+                                <span>Automatic hands-off operation that listens to audio and transitions between ambient and performance lighting</span>
+                            </div>
+                        </div>
+                        <div class="capability-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <div>
+                                <strong>Master dimmer</strong>
+                                <span>Global brightness control, 0&ndash;100%</span>
+                            </div>
+                        </div>
+                        <div class="capability-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <div>
+                                <strong>Crossfading</strong>
+                                <span>Smooth transitions between any two scenes with configurable fade times</span>
+                            </div>
+                        </div>
+                        <div class="capability-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <div>
+                                <strong>Blackout</strong>
+                                <span>Instant kill or graceful fade to black</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="capability-group fade-in">
+                    <div class="capability-group-header">
+                        <div class="icon-wrap"><i class="bi bi-soundwave"></i></div>
+                        <h3>For Audio-Reactive Lighting</h3>
+                    </div>
+                    <div class="capability-list">
+                        <div class="capability-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <div>
+                                <strong>Real-time beat detection</strong>
+                                <span>FFT-based frequency analysis with automatic gain control</span>
+                            </div>
+                        </div>
+                        <div class="capability-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <div>
+                                <strong>3-band frequency splitting</strong>
+                                <span>Separate responses for kick drums (low), snare (mid), and hi-hats (high)</span>
+                            </div>
+                        </div>
+                        <div class="capability-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <div>
+                                <strong>Music confidence scoring</strong>
+                                <span>Distinguishes music from speech and crowd noise, preventing false triggers</span>
+                            </div>
+                        </div>
+                        <div class="capability-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <div>
+                                <strong>Tap tempo</strong>
+                                <span>Manual beat sync when audio detection isn't available</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="capability-group fade-in">
+                    <div class="capability-group-header">
+                        <div class="icon-wrap"><i class="bi bi-tools"></i></div>
+                        <h3>For Visiting Professionals</h3>
+                    </div>
+                    <div class="capability-list">
+                        <div class="capability-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <div>
+                                <strong>Art-Net standard</strong>
+                                <span>Connect any Art-Net-compatible desk or software to the venue's lighting network</span>
+                            </div>
+                        </div>
+                        <div class="capability-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <div>
+                                <strong>Complete patch documentation</strong>
+                                <span>Every fixture's brand, model, DMX mode, and channel-by-channel function reference</span>
+                            </div>
+                        </div>
+                        <div class="capability-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <div>
+                                <strong>Fixture identify</strong>
+                                <span>Pulse any fixture from the interface to confirm which physical unit is which</span>
+                            </div>
+                        </div>
+                        <div class="capability-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <div>
+                                <strong>Open architecture</strong>
+                                <span>No lock-in – designed to let visiting engineers use their own preferred tools</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="capability-group fade-in">
+                    <div class="capability-group-header">
+                        <div class="icon-wrap"><i class="bi bi-building-gear"></i></div>
+                        <h3>For Venue Management</h3>
+                    </div>
+                    <div class="capability-list">
+                        <div class="capability-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <div>
+                                <strong>Usage statistics</strong>
+                                <span>Track system usage over time</span>
+                            </div>
+                        </div>
+                        <div class="capability-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <div>
+                                <strong>Persistent state</strong>
+                                <span>Remembers its last configuration across restarts</span>
+                            </div>
+                        </div>
+                        <div class="capability-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <div>
+                                <strong>Remote access</strong>
+                                <span>Control from anywhere on the venue network</span>
+                            </div>
+                        </div>
+                        <div class="capability-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <div>
+                                <strong>Zero maintenance</strong>
+                                <span>Runs as a Docker service, starts automatically, no intervention needed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Foundation -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header center">
+                <span class="section-label">Under the Hood</span>
+                <h2 class="section-title">Technical foundation</h2>
+                <p class="section-subtitle">Built on proven technologies and open standards.</p>
+            </div>
+
+            <div class="tech-grid">
+                <div class="tech-card fade-in">
+                    <div class="tech-label">Backend</div>
+                    <h4>Python (FastAPI)</h4>
+                    <p>Async architecture for low-latency DMX transmission and real-time audio processing.</p>
+                </div>
+                <div class="tech-card fade-in">
+                    <div class="tech-label">Frontend</div>
+                    <h4>Vanilla JavaScript SPA</h4>
+                    <p>No framework dependencies. Fast, lightweight, works on any device with a browser.</p>
+                </div>
+                <div class="tech-card fade-in">
+                    <div class="tech-label">Protocol</div>
+                    <h4>Art-Net (DMX512)</h4>
+                    <p>35 frames per second over the venue's local network. Industry-standard protocol, compatible with all professional lighting equipment.</p>
+                </div>
+                <div class="tech-card fade-in">
+                    <div class="tech-label">Smoothing</div>
+                    <h4>Exponential Moving Average</h4>
+                    <p>Smooths LED output to prevent visible flicker, while still allowing sharp effects like strobes and beat-reactive flashes to cut through cleanly.</p>
+                </div>
+                <div class="tech-card fade-in">
+                    <div class="tech-label">Audio</div>
+                    <h4>FFT Analysis</h4>
+                    <p>Analyses audio in real time to detect beats and musical energy. Automatically adjusts to varying volume levels and can use the venue's audio feed or a browser microphone.</p>
+                </div>
+                <div class="tech-card fade-in">
+                    <div class="tech-label">Deployment</div>
+                    <h4>Docker Compose</h4>
+                    <p>Nginx reverse proxy, persistent volumes for configuration and state. Zero-touch operation.</p>
+                </div>
+                <div class="tech-card fade-in">
+                    <div class="tech-label">Safety</div>
+                    <h4>Built-in Protection</h4>
+                    <p>Moving heads are prevented from accidentally strobing during scene transitions. Zone restriction keeps heads from pointing into the audience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What Makes It Different -->
+    <section class="section bg-alt">
+        <div class="container">
+            <div class="section-header center">
+                <span class="section-label">Philosophy</span>
+                <h2 class="section-title">What makes it different</h2>
+            </div>
+
+            <div class="different-content">
+                <p>ShowControl isn't trying to replace professional lighting software. It's not competing with LightKey, QLC+, or grandMA. Instead, it's the control layer that makes a venue's lighting <strong>accessible to everyone</strong> – from the staff who just need houselights, to the club committee member running a cabaret night, to the touring sound engineer who wants to take the lights off auto-pilot and run their own show.</p>
+
+                <div class="pullquote">
+                    Every installation is bespoke. The scenes are designed for the room. The programmes are tuned to the fixtures. The calibration is set to the physical space. It's lighting control that fits the venue like a glove.
+                </div>
+
+                <p>There's no one-size-fits-all configuration. No generic presets. No learning curve that requires a manual. ShowControl is built for each venue from the ground up – and that's exactly what makes it work.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Let's talk about your venue</h2>
+            <p>Every ShowControl installation starts with understanding the space, the fixtures, and the people who'll be using it.</p>
+            <div class="cta-buttons">
+                <a href="poynton-wmc.html" class="btn">
+                    <i class="bi bi-building"></i>
+                    See a case study
+                </a>
+                <a href="index.html#contact" class="btn btn-outline">
+                    <i class="bi bi-envelope"></i>
+                    Contact Us
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p><i class="bi bi-telephone"></i> <strong>UK:</strong> +44 (0) 1625 80 30 40</p>
+                    <p><i class="bi bi-telephone"></i> <strong>UK Non-Geo:</strong> +44 (0) 33 3443 1009</p>
+                    <p><i class="bi bi-telephone"></i> <strong>US:</strong> +1 702 904-9404</p>
+                    <p><i class="bi bi-envelope"></i> theteam@addedpixels.com</p>
+                    <small>* Calls may be recorded</small>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <p><a href="index.html">Home</a></p>
+                    <p><a href="about.html">About</a></p>
+                    <p><a href="poynton-wmc.html">Poynton WMC</a></p>
+                    <p><a href="index.html#contact">Contact</a></p>
+                </div>
+
+                <div class="footer-section">
+                    <h3>ShowControl</h3>
+                    <p>Bespoke web-based lighting control software. Professional lighting, without needing a professional.</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-social">
+                    <a href="http://www.twitter.com/addedPIXELS" target="_blank" aria-label="Follow addedPIXELS on Twitter">
+                        <i class="bi bi-twitter-x"></i>
+                    </a>
+                    <a href="https://www.addedpixels.com" target="_blank" aria-label="Visit addedPIXELS website">
+                        <i class="bi bi-globe"></i>
+                    </a>
+                </div>
+                <p>&copy; 2014-2026 addedPIXELS. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-link, .dropdown-link').forEach(link => {
+            link.addEventListener('click', function() {
+                document.querySelector('.nav-menu').classList.remove('active');
+            });
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(13, 17, 23, 0.98)';
+            } else {
+                header.style.background = 'rgba(13, 17, 23, 0.9)';
+            }
+        });
+
+        // Interface tab switching
+        document.querySelectorAll('.interface-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.interface-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.interface-panel').forEach(p => p.classList.remove('active'));
+
+                this.classList.add('active');
+                const panelId = 'panel-' + this.dataset.tab;
+                document.getElementById(panelId).classList.add('active');
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+        }
+    </script>
+</body>
+</html>
