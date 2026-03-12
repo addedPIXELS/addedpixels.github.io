@@ -545,6 +545,40 @@
             font-size: 0.9rem;
         }
 
+        /* LQIP blur-up */
+        .lqip-wrap {
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-secondary);
+        }
+        .lqip-wrap .lqip {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: blur(20px);
+            transform: scale(1.1);
+            z-index: 1;
+            transition: opacity 0.4s ease;
+        }
+        .lqip-wrap .lqip.loaded {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .lqip-wrap picture img,
+        .lqip-wrap > img:not(.lqip) {
+            width: 100%;
+            display: block;
+        }
+
+        /* Lazy video */
+        .lazy-video {
+            width: 100%;
+            display: block;
+            background: var(--bg-secondary);
+        }
+
         /* Video Placeholder */
         .video-placeholder {
             position: relative;
@@ -555,7 +589,8 @@
             margin-top: 3rem;
         }
 
-        .video-placeholder img {
+        .video-placeholder img,
+        .video-placeholder video {
             width: 100%;
             display: block;
         }
@@ -968,7 +1003,13 @@
     <!-- Hero -->
     <section class="hero">
         <div class="hero-image">
-            <img src="https://placehold.co/1200x600/1a1a2e/e0e0e0?text=Concert+Room+Panoramic" alt="Poynton WMC concert room with intelligent lighting rig in action – moving heads, LED bars, and sunstrips creating a vibrant atmosphere">
+            <div class="lqip-wrap">
+                <img class="lqip" src="images/projects/poyntonwmc-lighting-2026/lqip/360-concert-room.webp" alt="" aria-hidden="true">
+                <picture>
+                    <source srcset="images/projects/poyntonwmc-lighting-2026/360-concert-room.webp" type="image/webp">
+                    <img src="images/projects/poyntonwmc-lighting-2026/360-concert-room.JPG" alt="Poynton WMC concert room with intelligent lighting rig in action – moving heads, LED bars, and sunstrips creating a vibrant atmosphere">
+                </picture>
+            </div>
         </div>
         <div class="container">
             <div class="hero-content">
@@ -1007,7 +1048,13 @@
 
             <div class="story-grid">
                 <div class="story-card before fade-in">
-                    <img src="https://placehold.co/600x400/1a1a2e/e0e0e0?text=Original+2016+Lighting+Rig" alt="The original 2016 conventional lighting setup at Poynton WMC – traditional non-computerised system with conventional lighting desk">
+                    <div class="lqip-wrap">
+                        <img class="lqip" src="images/projects/poyntonwmc-lighting-2026/lqip/old-2016-1.webp" alt="" aria-hidden="true">
+                        <picture>
+                            <source srcset="images/projects/poyntonwmc-lighting-2026/old-2016-1.webp" type="image/webp">
+                            <img src="images/projects/poyntonwmc-lighting-2026/old-2016-1.JPG" alt="The original 2016 conventional lighting setup at Poynton WMC – traditional non-computerised system with conventional lighting desk" loading="lazy">
+                        </picture>
+                    </div>
                     <div class="story-card-content">
                         <span class="year-badge">October 2016</span>
                         <h3>The original installation</h3>
@@ -1016,7 +1063,13 @@
                 </div>
 
                 <div class="story-card after fade-in">
-                    <img src="https://placehold.co/600x400/1a1a2e/e0e0e0?text=New+2026+Intelligent+Rig" alt="The new intelligent lighting rig at Poynton WMC – moving heads, LED bars and sunstrips controlled by ShowControl">
+                    <div class="lqip-wrap">
+                        <img class="lqip" src="images/projects/poyntonwmc-lighting-2026/lqip/scene-party-1.webp" alt="" aria-hidden="true">
+                        <picture>
+                            <source srcset="images/projects/poyntonwmc-lighting-2026/scene-party-1.webp" type="image/webp">
+                            <img src="images/projects/poyntonwmc-lighting-2026/scene-party-1.JPG" alt="The new intelligent lighting rig at Poynton WMC – moving heads, LED bars and sunstrips controlled by ShowControl" loading="lazy">
+                        </picture>
+                    </div>
                     <div class="story-card-content">
                         <span class="year-badge">2026 – Complete Refit</span>
                         <h3>Intelligent lighting, simple control</h3>
@@ -1025,9 +1078,12 @@
                 </div>
             </div>
 
-            <!-- Video Placeholder -->
-            <div class="video-placeholder fade-in">
-                <img src="https://placehold.co/1200x500/1a1a2e/e0e0e0?text=Video+Walkthrough" alt="Video walkthrough of the Poynton WMC lighting installation and ShowControl interface in action">
+            <!-- Video Walkthrough -->
+            <div class="video-placeholder fade-in" id="video-walkthrough">
+                <video class="lazy-video" preload="none" muted loop playsinline poster="images/projects/poyntonwmc-lighting-2026/video-stage-to-landing-poster.webp">
+                    <source data-src="images/projects/poyntonwmc-lighting-2026/video-stage-to-landing.webm" type="video/webm">
+                    <source data-src="images/projects/poyntonwmc-lighting-2026/video-stage-to-landing.mp4" type="video/mp4">
+                </video>
                 <div class="play-overlay">
                     <div class="play-btn">
                         <i class="bi bi-play-fill"></i>
@@ -1067,7 +1123,13 @@
 
             <div class="fixtures-grid">
                 <div class="fixture-card fade-in">
-                    <img src="https://placehold.co/600x400/1a1a2e/e0e0e0?text=Moving+Heads+In+Action" alt="Three Stairville SonicPulse wash moving heads creating dynamic colour sweeps across the dance floor">
+                    <div class="lqip-wrap">
+                        <img class="lqip" src="images/projects/poyntonwmc-lighting-2026/lqip/dance-floor-1.webp" alt="" aria-hidden="true">
+                        <picture>
+                            <source srcset="images/projects/poyntonwmc-lighting-2026/dance-floor-1.webp" type="image/webp">
+                            <img src="images/projects/poyntonwmc-lighting-2026/dance-floor-1.JPG" alt="Three Stairville SonicPulse wash moving heads creating dynamic colour sweeps across the dance floor" loading="lazy">
+                        </picture>
+                    </div>
                     <div class="fixture-card-content">
                         <h3>Moving Head Wash</h3>
                         <p class="fixture-model">Stairville SonicPulse Moving Head Wash 1208s</p>
@@ -1081,7 +1143,13 @@
                 </div>
 
                 <div class="fixture-card fade-in">
-                    <img src="https://placehold.co/600x400/1a1a2e/e0e0e0?text=Tungsten+Sunstrip+Blinders" alt="Two Showtec Sunstrip LED Tungsten Blinders providing warm stage-forward house lighting">
+                    <div class="lqip-wrap">
+                        <img class="lqip" src="images/projects/poyntonwmc-lighting-2026/lqip/houselights-1.webp" alt="" aria-hidden="true">
+                        <picture>
+                            <source srcset="images/projects/poyntonwmc-lighting-2026/houselights-1.webp" type="image/webp">
+                            <img src="images/projects/poyntonwmc-lighting-2026/houselights-1.JPG" alt="Two Showtec Sunstrip LED Tungsten Blinders providing warm stage-forward house lighting" loading="lazy">
+                        </picture>
+                    </div>
                     <div class="fixture-card-content">
                         <h3>Tungsten Sunstrip</h3>
                         <p class="fixture-model">Showtec Sunstrip LED Tungsten Blinders</p>
@@ -1095,7 +1163,13 @@
                 </div>
 
                 <div class="fixture-card fade-in">
-                    <img src="https://placehold.co/600x400/1a1a2e/e0e0e0?text=LED+Bars+Colour+Wash" alt="Eight Stairville LED Bar 240/8 RGB bars creating per-pixel colour effects across the venue">
+                    <div class="lqip-wrap">
+                        <img class="lqip" src="images/projects/poyntonwmc-lighting-2026/lqip/scene-party-1.webp" alt="" aria-hidden="true">
+                        <picture>
+                            <source srcset="images/projects/poyntonwmc-lighting-2026/scene-party-1.webp" type="image/webp">
+                            <img src="images/projects/poyntonwmc-lighting-2026/scene-party-1.JPG" alt="Eight Stairville LED Bar 240/8 RGB bars creating per-pixel colour effects across the venue" loading="lazy">
+                        </picture>
+                    </div>
                     <div class="fixture-card-content">
                         <h3>LED Bar</h3>
                         <p class="fixture-model">Stairville LED Bar 240/8 RGB</p>
@@ -1116,7 +1190,13 @@
         <div class="container">
             <div class="control-grid">
                 <div class="control-image fade-in">
-                    <img src="https://placehold.co/600x400/1a1a2e/e0e0e0?text=iPad+Control+Interface" alt="ShowControl running on an iPad – showing the Easy Mode interface with large, clearly labelled buttons for one-tap lighting control">
+                    <div class="lqip-wrap">
+                        <img class="lqip" src="images/projects/poyntonwmc-lighting-2026/lqip/side-of-stage-1.webp" alt="" aria-hidden="true">
+                        <picture>
+                            <source srcset="images/projects/poyntonwmc-lighting-2026/side-of-stage-1.webp" type="image/webp">
+                            <img src="images/projects/poyntonwmc-lighting-2026/side-of-stage-1.JPG" alt="ShowControl running on an iPad – showing the Easy Mode interface with large, clearly labelled buttons for one-tap lighting control" loading="lazy">
+                        </picture>
+                    </div>
                 </div>
                 <div class="control-text">
                     <span class="section-label">The Control System</span>
@@ -1359,6 +1439,60 @@
                 observer.observe(el);
             });
         }
+
+        // LQIP blur-up: fade out placeholder once full image loads
+        document.querySelectorAll('.lqip-wrap').forEach(wrap => {
+            const fullImg = wrap.querySelector('picture img');
+            if (fullImg) {
+                const reveal = () => {
+                    const lqip = wrap.querySelector('.lqip');
+                    if (lqip) lqip.classList.add('loaded');
+                };
+                if (fullImg.complete) reveal();
+                else fullImg.addEventListener('load', reveal);
+            }
+        });
+
+        // Lazy-load videos when they enter the viewport
+        if ('IntersectionObserver' in window) {
+            const videoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const video = entry.target.querySelector('video');
+                        if (video) {
+                            video.querySelectorAll('source[data-src]').forEach(source => {
+                                source.src = source.dataset.src;
+                                source.removeAttribute('data-src');
+                            });
+                            video.load();
+                        }
+                        videoObserver.unobserve(entry.target);
+                    }
+                });
+            }, { rootMargin: '200px' });
+
+            document.querySelectorAll('.video-placeholder').forEach(el => {
+                videoObserver.observe(el);
+            });
+        }
+
+        // Video play on click
+        document.querySelectorAll('.video-placeholder').forEach(wrapper => {
+            wrapper.addEventListener('click', function() {
+                const video = this.querySelector('video');
+                const overlay = this.querySelector('.play-overlay');
+                if (video) {
+                    // Ensure sources are loaded
+                    video.querySelectorAll('source[data-src]').forEach(source => {
+                        source.src = source.dataset.src;
+                        source.removeAttribute('data-src');
+                    });
+                    video.load();
+                    video.play();
+                    if (overlay) overlay.style.display = 'none';
+                }
+            });
+        });
     </script>
 </body>
 </html>
