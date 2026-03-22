@@ -91,6 +91,40 @@
     color: var(--primary);
   }
 
+  .currency-selector {
+    display: flex;
+    gap: 4px;
+    margin-right: 4px;
+  }
+
+  .currency-btn {
+    width: 36px;
+    height: 36px;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    background: var(--card);
+    color: var(--text-muted);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+    transition: background 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .currency-btn:hover {
+    color: var(--primary);
+  }
+
+  .currency-btn.active {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--bg);
+  }
+
   .card {
     background: var(--card);
     border-radius: var(--radius);
@@ -464,6 +498,11 @@
   <div class="header">
     <h1>Tip Calculator</h1>
     <div class="header-actions">
+      <div class="currency-selector">
+        <button class="currency-btn" data-currency="USD" title="US Dollars">$</button>
+        <button class="currency-btn" data-currency="GBP" title="British Pounds">&pound;</button>
+        <button class="currency-btn" data-currency="EUR" title="Euros">&euro;</button>
+      </div>
       <button class="icon-btn" id="resetBtn" title="Reset">&#x21bb;</button>
       <button class="icon-btn" id="themeBtn" title="Toggle dark mode">&#x263E;</button>
     </div>
@@ -520,8 +559,8 @@
     </div>
     <div class="round-buttons" id="roundButtons" style="display:none;">
       <button class="round-btn" id="roundUp1">Round up<span class="round-target" id="roundUp1Target"></span></button>
-      <button class="round-btn" id="roundUp5">Nearest $5<span class="round-target" id="roundUp5Target"></span></button>
-      <button class="round-btn" id="roundUp10">Nearest $10<span class="round-target" id="roundUp10Target"></span></button>
+      <button class="round-btn" id="roundUp5">Nearest $5 <span class="round-target" id="roundUp5Target"></span></button>
+      <button class="round-btn" id="roundUp10">Nearest $10 <span class="round-target" id="roundUp10Target"></span></button>
     </div>
   </div>
 
@@ -561,9 +600,52 @@
   var roundButtons = document.getElementById('roundButtons');
   var themeBtn = document.getElementById('themeBtn');
   var resetBtn = document.getElementById('resetBtn');
+  var currencyBtns = document.querySelectorAll('.currency-btn');
+  var currencySpans = document.querySelectorAll('.input-wrap .currency');
 
   var tipPct = 20;
   var roundedTotal = null; // when set, overrides percentage-based calculation
+
+  // --- Currency ---
+  var currencies = {
+    USD: { symbol: '$' },
+    GBP: { symbol: '\u00A3' },
+    EUR: { symbol: '\u20AC' }
+  };
+  var currentCurrency = 'USD';
+
+  var eurozoneCountries = [
+    'AT','BE','CY','DE','EE','ES','FI','FR','GR','HR','IE',
+    'IT','LT','LU','LV','MT','NL','PT','SI','SK'
+  ];
+
+  function countryToCurrency(code) {
+    if (code === 'US') return 'USD';
+    if (code === 'GB') return 'GBP';
+    if (eurozoneCountries.indexOf(code) !== -1) return 'EUR';
+    return 'USD';
+  }
+
+  function setCurrency(code) {
+    currentCurrency = code;
+    localStorage.setItem('tipCalcCurrency', code);
+    currencyBtns.forEach(function(b) {
+      b.classList.toggle('active', b.dataset.currency === code);
+    });
+    currencySpans.forEach(function(s) {
+      s.textContent = currencies[code].symbol;
+    });
+    var sym = currencies[code].symbol;
+    document.getElementById('roundUp5').firstChild.textContent = 'Nearest ' + sym + '5';
+    document.getElementById('roundUp10').firstChild.textContent = 'Nearest ' + sym + '10';
+    if (typeof calculate === 'function') calculate();
+  }
+
+  currencyBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      setCurrency(btn.dataset.currency);
+    });
+  });
 
   // --- Theme ---
   function getPreferredTheme() {
@@ -604,7 +686,7 @@
 
   // --- Formatting ---
   function fmt(n) {
-    return '$' + n.toFixed(2);
+    return currencies[currentCurrency].symbol + n.toFixed(2);
   }
 
   function roundUpTo(total, step) {
@@ -742,7 +824,24 @@
   taxEl.addEventListener('input', function() { roundedTotal = null; calculate(); });
 
   // --- Init ---
-  calculate();
+  // Load saved currency or auto-detect from IP geolocation
+  (function initCurrency() {
+    var saved = localStorage.getItem('tipCalcCurrency');
+    if (saved && currencies[saved]) {
+      setCurrency(saved);
+      return;
+    }
+    // Set default immediately, then try to detect
+    setCurrency('USD');
+    fetch('https://ipapi.co/json/')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data && data.country_code) {
+          setCurrency(countryToCurrency(data.country_code));
+        }
+      })
+      .catch(function() {});
+  })();
 </script>
 
 </body>
