@@ -11,17 +11,23 @@
     <meta property="og:url" content="https://addedpixels.com/chordlibre-editor">
     <meta property="og:title" content="ChordLibre Web Editor">
     <meta property="og:description" content="Create and edit .chordlibre chord sheets in your browser.">
+    <meta property="og:site_name" content="addedPIXELS">
+    <meta property="og:image" content="https://addedpixels.com/images/share/og-default.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="en_GB">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@addedPIXELS">
+    <meta name="twitter:title" content="ChordLibre Web Editor · addedPIXELS">
+    <meta name="twitter:description" content="Create and edit .chordlibre chord sheets in your browser.">
+    <meta name="twitter:image" content="https://addedpixels.com/images/share/og-default.png">
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://addedpixels.com/chordlibre-editor">
-    <meta property="twitter:title" content="ChordLibre Web Editor">
-    <meta property="twitter:description" content="Create and edit .chordlibre chord sheets in your browser.">
 
     <link rel="shortcut icon" type="image/png" href="images/logos/addedpixels_favicon_dark.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Manrope:wght@400;500;600;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/site-2026.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <style>
@@ -829,42 +835,57 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <nav class="container">
-            <div class="nav">
-                <div class="logo">
-                    <a href="index.html"><img src="images/logos/addedpixels_logo_standard_dark.png" alt="addedPIXELS"></a>
-                </div>
-                <ul class="nav-menu">
-                    <li><a href="index.html" class="nav-link">Home</a></li>
-                    <li><a href="about.html" class="nav-link">About</a></li>
-                    <li><a href="index.html#services" class="nav-link">Services</a></li>
-                    <li><a href="index.html#projects" class="nav-link">Projects</a></li>
-                    <li class="nav-dropdown">
-                        <a href="#" class="nav-link dropdown-toggle">Apps <i class="fas fa-chevron-down"></i></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="speedlap.html" class="dropdown-link">SpeedLap</a></li>
-                            <li><a href="speedlap-insights.html" class="dropdown-link">SpeedLap Insights</a></li>
-                            <li><a href="chordlibre.html" class="dropdown-link">ChordLibre</a></li>
-                            <li><a href="chordlibre-editor.html" class="dropdown-link active">ChordLibre Web Editor</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="index.html#team" class="nav-link">Team</a></li>
-                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
-                </ul>
-                <button class="mobile-menu-btn" aria-label="Toggle navigation menu">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-        </nav>
+    <!-- Header (V4) -->
+    <header class="head">
+        <div class="wrap head-inner">
+            <a class="brand" href="/">
+                <img class="logo-dark" src="images/logos/addedpixels_logo_standard_dark.png" alt="addedPIXELS">
+                <img class="logo-light" src="images/logos/addedpixels_logo_standard_light.png" alt="addedPIXELS">
+                <span class="brand-hand">since '14</span>
+            </a>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="index.html#do">What we do</a>
+                <li class="nav-drop" style="list-style:none;"><a href="index.html#work" tabindex="0">Work <span class="chev">▾</span></a>
+                    <ul class="nav-drop-menu is-work">
+                        <li><a href="marple.html" class="case-entry">
+                            <span class="t">Marple Social and Forces Club</span>
+                            <span class="s">the operations platform</span>
+                        </a></li>
+                        <li><a href="masonic-tracker.html" class="case-entry">
+                            <span class="t">Masonic Tracker</span>
+                            <span class="s">SaaS for Freemasonry</span>
+                        </a></li>
+                        <li><a href="poynton-wmc.html" class="case-entry">
+                            <span class="t">Poynton WMC</span>
+                            <span class="s">intelligent lighting</span>
+                        </a></li>
+                        <li class="div"></li>
+                        <li><a href="index.html#work" class="case-entry case-all">
+                            <span class="t">All work →</span>
+                        </a></li>
+                    </ul>
+                </li>
+                <li class="nav-drop" style="list-style:none;"><a href="#" tabindex="0">Apps <span class="chev">▾</span></a>
+                    <ul class="nav-drop-menu">
+                        <li><a href="speedlap.html">SpeedLap</a></li>
+                        <li><a href="speedlap-insights.html">SpeedLap Insights</a></li>
+                        <li><a href="chordlibre.html">ChordLibre</a></li>
+                        <li><a href="chordlibre-editor.html" style="color:var(--green-deep);">ChordLibre Editor</a></li>
+                        <li><a href="showcontrol.html">ShowControl</a></li>
+                    </ul>
+                </li>
+                <a href="about.html">About</a>
+                <a class="cta" href="index.html#contact">Say hi →</a>
+            </nav>
+        </div>
     </header>
 
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <div class="hero-content">
-                <img src="images/chordlibrelogo.png" alt="ChordLibre Web Editor" class="app-icon" width="120" height="120">
+                <picture><source srcset="images/chordlibrelogo.webp" type="image/webp"><img src="images/chordlibrelogo.png" alt="ChordLibre Web Editor" class="app-icon" width="120" height="120"></picture>
                 <h1>ChordLibre Web Editor</h1>
                 <p class="subtitle">Create and edit chord sheets in your browser</p>
                 <p class="value-statement">Import, generate, and export .chordlibre files. Free companion tool for the ChordLibre iOS app.</p>
@@ -1008,38 +1029,44 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Contact Us</h3>
-                    <p><i class="fas fa-phone"></i> <strong>UK:</strong> +44 (0) 1625 80 30 40</p>
-                    <p><i class="fas fa-phone"></i> <strong>UK Non-Geo:</strong> +44 (0) 33 3443 1009</p>
-                    <p><i class="fas fa-phone"></i> <strong>US:</strong> +1 702 904-9404</p>
-                    <p><i class="fas fa-envelope"></i> theteam@addedpixels.com</p>
-                    <small>* Calls may be recorded</small>
-                </div>
-
-                <div class="footer-section">
-                    <h3>ChordLibre</h3>
-                    <p>Create, manage, and perform with your chord sheets on iOS.</p>
-                    <p><a href="https://apps.apple.com/us/app/chordlibre/id6751736157">Download on the App Store</a></p>
-                    <p><a href="https://github.com/addedPIXELS/ChordLibre" target="_blank" rel="noopener noreferrer">View Source Code</a> • Apache 2.0 License</p>
+    <!-- Foot band (V4) -->
+    <section class="foot-band" style="margin-top: 4rem;">
+        <div class="wrap foot-band-inner">
+            <div>
+                <span class="lede">Made the iOS app too?</span>
+                <h3>Grab ChordLibre.</h3>
+                <p>This web editor pairs with the ChordLibre iOS app. Free on the App Store, open source on GitHub. Apache 2.0.</p>
+                <div style="margin-top: 1.25rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <a class="btn small" href="chordlibre.html">ChordLibre product →</a>
+                    <a class="btn small ghost" href="https://github.com/addedPIXELS/ChordLibre" target="_blank" rel="noopener">GitHub ↗</a>
                 </div>
             </div>
-
-            <div class="footer-bottom">
-                <div class="footer-social">
-                    <a href="http://www.twitter.com/addedPIXELS" target="_blank" aria-label="Follow addedPIXELS on Twitter">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="https://www.addedpixels.com" target="_blank" aria-label="Visit addedPIXELS website">
-                        <i class="fas fa-globe"></i>
-                    </a>
-                </div>
-                <p>&copy; 2014-2025 addedPIXELS. All rights reserved.</p>
+            <div>
+                <h3>Reach us</h3>
+                <ul>
+                    <li><a href="tel:+441625803040"><span>+44 (0) 1625 80 30 40</span><span class="k">UK</span></a></li>
+                    <li><a href="tel:+443334431009"><span>+44 (0) 33 3443 1009</span><span class="k">UK non-geo</span></a></li>
+                    <li><a href="tel:+17029049404"><span>+1 702 904 9404</span><span class="k">US</span></a></li>
+                    <li><a href="mailto:theteam@addedpixels.com"><span>theteam@addedpixels.com</span><span class="k">email</span></a></li>
+                </ul>
             </div>
+            <div>
+                <h3>Other places</h3>
+                <ul>
+                    <li><a href="index.html"><span>Studio home</span><span class="k">→</span></a></li>
+                    <li><a href="index.html#work"><span>All work</span><span class="k">→</span></a></li>
+                    <li><a href="speedlap-insights.html"><span>SpeedLap Insights</span><span class="k">→</span></a></li>
+                    <li><a href="about.html"><span>About</span><span class="k">→</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <footer class="foot">
+        <div class="wrap row">
+            <span>© 2014 — 2026 addedPIXELS · Manchester · UK</span>
+            <span>made by the people who'll also answer the phone</span>
+            <a href="mailto:theteam@addedpixels.com">theteam@addedpixels.com</a>
         </div>
     </footer>
 
@@ -1441,7 +1468,7 @@
         });
 
         // Mobile menu toggle
-        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+        (document.querySelector('.mobile-menu-btn') || {addEventListener:()=>{}}).addEventListener('click', function() {
             document.querySelector('.nav-menu').classList.toggle('active');
         });
 

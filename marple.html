@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marple Social and Forces Club · case study — addedPIXELS</title>
+<meta name="description" content="How we replaced a small club's manual paperwork with a single platform that runs membership, payments, events, EPOS, staff rota, and AGMs. Revenue went £80k → £250k. Members went 100 → 500+.">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="addedPIXELS">
+<meta property="og:url" content="https://addedpixels.com/marple.html">
+<meta property="og:title" content="Marple Social and Forces Club, the operations platform · addedPIXELS">
+<meta property="og:description" content="We replaced the paperwork with a platform. Revenue tripled, members 100 to 500+. Full case study.">
+<meta property="og:image" content="https://addedpixels.com/images/projects/marple/front-of-club-2025-05.jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@addedPIXELS">
+<meta name="twitter:title" content="Marple Social and Forces Club, the operations platform · addedPIXELS">
+<meta name="twitter:description" content="We replaced the paperwork with a platform. Revenue tripled, members 100 to 500+. Full case study.">
+<meta name="twitter:image" content="https://addedpixels.com/images/projects/marple/front-of-club-2025-05.jpeg">
+
+<link rel="shortcut icon" type="image/png" href="images/logos/addedpixels_favicon_dark.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Manrope:wght@400;500;600;700&family=Caveat:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site-2026.css">
+
+<style>
+/* ──── HERO ──── */
+.case-hero {
+    padding: 4rem 0 3rem;
+    position: relative;
+}
+.case-crumb {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--hand);
+    color: var(--green-deep);
+    font-size: 1.2rem;
+    text-decoration: none;
+    margin-bottom: 1rem;
+    
+}
+.case-crumb:hover { color: var(--terracotta); }
+.case-meta {
+    display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+.case-meta span { display: inline-flex; align-items: center; gap: 0.4rem; }
+.case-meta span::before { content: "●"; color: var(--green); }
+
+.case-hero h1 {
+    font-family: var(--display);
+    font-weight: 350;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-size: clamp(2.6rem, 6vw, 5.2rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    max-width: 20ch;
+}
+.case-hero h1 em { font-style: italic; color: var(--green-deep); font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
+
+.case-lede {
+    font-size: 1.25rem;
+    color: var(--ink-soft);
+    max-width: 56ch;
+    margin-bottom: 2.5rem;
+}
+
+/* hero stats row */
+.hero-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+.hero-stat {
+    background: var(--cream);
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    padding: 1.5rem 1.25rem;
+    
+    transition: transform 0.2s;
+}
+.hero-stat:nth-child(2) {  }
+.hero-stat:nth-child(3) {  }
+.hero-stat:nth-child(4) {  }
+.hero-stat:hover { transform: translateY(-2px); }
+.hero-stat .v {
+    font-family: var(--display);
+    font-weight: 350;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    margin-bottom: 0.4rem;
+}
+.hero-stat .v em { font-style: italic; color: var(--green-deep); font-variation-settings: "opsz" 144, "SOFT" 100; }
+.hero-stat .l { font-family: var(--hand); color: var(--ink-mute); font-size: 1.1rem; }
+@media (max-width: 820px) { .hero-stats { grid-template-columns: repeat(2, 1fr); } }
+
+/* two-column hero layout */
+.case-hero-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+.hero-media {
+    position: relative;
+    aspect-ratio: 5 / 4;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    box-shadow: 8px 10px 0 var(--rule-soft);
+    background: var(--cream-deep);
+}
+.hero-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-media .tape { position: absolute; top: -8px; left: 30%; z-index: 2; }
+
+@media (max-width: 900px) {
+    .case-hero-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .hero-media { aspect-ratio: 16 / 10; }
+}
+
+/* growth band */
+.growth {
+    margin: 4rem 0;
+    border-top: 1px dashed var(--rule);
+    border-bottom: 1px dashed var(--rule);
+    padding: 4rem 0;
+    background: var(--cream-soft);
+}
+.growth-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+.growth h2 {
+    font-family: var(--display);
+    font-weight: 350;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-size: clamp(2rem, 5vw, 4rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+}
+.growth h2 em { font-style: italic; color: var(--green-deep); font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
+.growth p { color: var(--ink-soft); font-size: 1.1rem; margin-bottom: 1rem; }
+.growth-chart {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    padding: 2rem;
+    
+    box-shadow: 6px 6px 0 var(--rule-soft);
+}
+.gc-row { display: grid; grid-template-columns: 120px 1fr 80px; gap: 1rem; align-items: center; margin-bottom: 1.25rem; }
+.gc-row:last-child { margin-bottom: 0; }
+.gc-row .k { font-family: var(--hand); color: var(--ink-mute); font-size: 1.1rem; }
+.gc-row .bar { position: relative; height: 22px; background: var(--cream-soft); border-radius: 999px; overflow: hidden; }
+.gc-row .bar .fill { position: absolute; inset: 0; background: linear-gradient(90deg, var(--green) 0%, var(--green-deep) 100%); border-radius: 999px; transform-origin: left; transform: scaleX(0); transition: transform 1.2s cubic-bezier(0.2, 0.65, 0.3, 1); }
+.gc-row .bar.is-in .fill { transform: scaleX(var(--w, 1)); }
+.gc-row .v { font-family: var(--display); font-weight: 400; font-size: 1.1rem; color: var(--ink); text-align: right; }
+@media (max-width: 820px) {
+    .growth-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .gc-row { grid-template-columns: 100px 1fr 70px; }
+}
+
+/* problem / brief */
+.brief { padding: 4rem 0; }
+.brief-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+}
+.brief h2 {
+    font-family: var(--display);
+    font-weight: 350;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-size: clamp(1.8rem, 3.6vw, 2.8rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin-bottom: 1.25rem;
+    max-width: 22ch;
+}
+.brief h2 em { font-style: italic; color: var(--green-deep); font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
+.brief p { color: var(--ink-soft); font-size: 1.05rem; margin-bottom: 1rem; max-width: 56ch; }
+.brief-side {
+    background: var(--cream);
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    padding: 1.75rem;
+    
+    box-shadow: 5px 5px 0 var(--rule-soft);
+}
+.brief-side h3 { font-family: var(--hand); color: var(--terracotta); font-size: 1.4rem; margin-bottom: 0.75rem;  display: inline-block; }
+.brief-side ul { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
+.brief-side li {
+    padding: 0.55rem 0.85rem;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    font-size: 0.93rem;
+    color: var(--ink-mute);
+    text-decoration: line-through;
+    text-decoration-color: var(--terracotta);
+    text-decoration-thickness: 2px;
+}
+.brief-side li::before { content: "✕  "; color: var(--terracotta); font-weight: bold; }
+@media (max-width: 820px) { .brief-inner { grid-template-columns: 1fr; gap: 2rem; } }
+
+/* the platform - big section */
+.platform {
+    padding: 5rem 0;
+    background: var(--cream-soft);
+    border-top: 1px dashed var(--rule);
+    border-bottom: 1px dashed var(--rule);
+}
+.platform-head { display: grid; grid-template-columns: auto 1fr; gap: 3rem; align-items: end; margin-bottom: 3rem; }
+.platform-head h2 {
+    font-family: var(--display);
+    font-weight: 350;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    max-width: 22ch;
+}
+.platform-head h2 em { font-style: italic; color: var(--green-deep); font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
+
+.modules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+.module {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    padding: 1.75rem;
+    transition: transform 0.25s, box-shadow 0.25s;
+    position: relative;
+}
+.module:hover { transform: translateY(-3px); box-shadow: 5px 5px 0 var(--rule-soft); }
+.module .icn {
+    width: 44px; height: 44px;
+    background: var(--cream);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--display); color: var(--green-deep); font-size: 1.3rem;
+    margin-bottom: 1rem;
+    
+}
+.module h3 { font-family: var(--display); font-weight: 400; font-variation-settings: "opsz" 32; font-size: 1.25rem; margin-bottom: 0.4rem; letter-spacing: -0.015em; }
+.module p { color: var(--ink-mute); font-size: 0.93rem; margin-bottom: 1rem; }
+.module ul { list-style: none; padding-top: 0.75rem; border-top: 1px dashed var(--rule); display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.module ul li { font-size: 0.78rem; color: var(--ink-soft); background: var(--cream); border: 1px solid var(--rule); padding: 0.2rem 0.55rem; border-radius: 999px; font-weight: 500; }
+@media (max-width: 820px) { .modules { grid-template-columns: repeat(2, 1fr); } .platform-head { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .modules { grid-template-columns: 1fr; } }
+
+/* numbers band */
+.numbers { padding: 5rem 0; }
+.numbers-head { text-align: center; margin-bottom: 3rem; }
+.numbers-head h2 {
+    font-family: var(--display);
+    font-weight: 350;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    letter-spacing: -0.03em;
+    line-height: 1;
+}
+.numbers-head h2 em { font-style: italic; color: var(--green-deep); font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
+.numbers-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    margin-top: 2.5rem;
+}
+.nm-card {
+    background: var(--invert-bg);
+    color: var(--invert-text);
+    border: 1px solid var(--invert-bg-soft);
+    border-radius: 18px;
+    padding: 2rem 1.5rem;
+}
+.nm-card .n {
+    font-family: var(--display);
+    font-weight: 350;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--green);
+    margin-bottom: 0.6rem;
+}
+.nm-card .l { font-family: var(--hand); color: var(--invert-text-soft); font-size: 1.1rem; }
+.nm-card .d { font-size: 0.85rem; color: var(--invert-text-mute); margin-top: 0.5rem; }
+@media (max-width: 820px) { .numbers-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* stack diagram */
+.stack {
+    padding: 5rem 0;
+    background: var(--cream-soft);
+    border-top: 1px dashed var(--rule);
+    border-bottom: 1px dashed var(--rule);
+}
+.stack-head { margin-bottom: 2.5rem; }
+.stack-head h2 {
+    font-family: var(--display);
+    font-weight: 350;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.03em;
+    line-height: 1;
+}
+.stack-head h2 em { font-style: italic; color: var(--green-deep); font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
+.stack-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+}
+.stack-card {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    padding: 1.5rem;
+}
+.stack-card .lbl {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    color: var(--green-deep);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+}
+.stack-card h3 { font-family: var(--display); font-size: 1.15rem; margin-bottom: 0.75rem; letter-spacing: -0.01em; }
+.stack-card ul { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+.stack-card li { font-size: 0.92rem; color: var(--ink-soft); display: flex; align-items: center; gap: 0.5rem; padding-left: 1.1rem; position: relative; }
+.stack-card li::before { content: "›"; color: var(--green); font-weight: 700; position: absolute; left: 0; }
+@media (max-width: 820px) { .stack-grid { grid-template-columns: 1fr; } }
+
+/* outcome */
+.outcome { padding: 5rem 0; }
+.outcome-inner {
+    background: var(--cream);
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    padding: 3rem;
+    
+    box-shadow: 8px 8px 0 var(--rule-soft);
+    background-image: repeating-linear-gradient(transparent 0 31px, var(--rule-soft) 31px 32px);
+}
+.outcome-inner .doodle { font-family: var(--hand); color: var(--terracotta); font-size: 1.3rem;  display: inline-block; margin-bottom: 0.5rem; }
+.outcome-inner h2 {
+    font-family: var(--display);
+    font-weight: 350;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-size: clamp(2rem, 4.5vw, 3.4rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+    max-width: 22ch;
+}
+.outcome-inner h2 em { font-style: italic; color: var(--green-deep); font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
+.outcome-inner p { color: var(--ink-soft); font-size: 1.1rem; margin-bottom: 1rem; max-width: 64ch; }
+.outcome-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1.5rem 0; }
+.outcome-list li { padding: 0.6rem 0.85rem; background: var(--paper); border: 1px solid color-mix(in srgb, var(--green) 30%, var(--rule)); border-radius: 10px; font-size: 0.95rem; }
+.outcome-list li::before { content: "✓  "; color: var(--green-deep); font-weight: bold; }
+@media (max-width: 700px) {
+    .outcome-list { grid-template-columns: 1fr; }
+    .outcome-inner { padding: 2rem 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="head">
+    <div class="wrap head-inner">
+        <a class="brand" href="/">
+            <img class="logo-dark" src="images/logos/addedpixels_logo_standard_dark.png" alt="addedPIXELS">
+            <img class="logo-light" src="images/logos/addedpixels_logo_standard_light.png" alt="addedPIXELS">
+            <span class="brand-hand">since '14</span>
+        </a>
+        <nav class="nav">
+            <a href="index.html">Home</a>
+            <a href="index.html#do">What we do</a>
+            <li class="nav-drop" style="list-style:none;"><a href="index.html#work" tabindex="0">Work <span class="chev">▾</span></a>
+                <ul class="nav-drop-menu is-work">
+                    <li><a href="marple.html" class="case-entry is-active">
+                        <span class="t">Marple Social and Forces Club</span>
+                        <span class="s">the operations platform</span>
+                    </a></li>
+                    <li><a href="masonic-tracker.html" class="case-entry">
+                        <span class="t">Masonic Tracker</span>
+                        <span class="s">SaaS for Freemasonry</span>
+                    </a></li>
+                    <li><a href="poynton-wmc.html" class="case-entry">
+                        <span class="t">Poynton WMC</span>
+                        <span class="s">intelligent lighting</span>
+                    </a></li>
+                    <li class="div"></li>
+                    <li><a href="index.html#work" class="case-entry case-all">
+                        <span class="t">All work →</span>
+                    </a></li>
+                </ul>
+            </li>
+            <li class="nav-drop" style="list-style:none;"><a href="#" tabindex="0">Apps <span class="chev">▾</span></a>
+                <ul class="nav-drop-menu">
+                    <li><a href="speedlap.html">SpeedLap</a></li>
+                    <li><a href="speedlap-insights.html">SpeedLap Insights</a></li>
+                    <li><a href="chordlibre.html">ChordLibre</a></li>
+                    <li><a href="showcontrol.html">ShowControl</a></li>
+                </ul>
+            </li>
+            <a href="about.html">About</a>
+            <a class="cta" href="index.html#contact">Say hi →</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+
+<!-- ───── HERO ───── -->
+<section class="case-hero">
+    <div class="wrap">
+        <a class="case-crumb" href="index.html#work" data-reveal>← back to work</a>
+        <div class="case-meta" data-reveal>
+            <span>Case 02</span>
+            <span>Operations &amp; platform</span>
+            <span>Marple Social and Forces Club</span>
+            <span>Ongoing, since 2024</span>
+        </div>
+
+        <div class="case-hero-grid">
+            <div class="case-hero-text">
+                <h1 data-reveal>
+                    We replaced<br>
+                    the <em>paperwork</em><br>
+                    with the platform.
+                </h1>
+                <p class="case-lede" data-reveal>
+                    Marple Social and Forces Club ran on paper, three SaaS subscriptions, and the patience of its committee. We built one piece of software that owns the membership, the till, the events, the rota, and the AGM. Revenue tripled. Membership multiplied. The committee can take Sundays off.
+                </p>
+            </div>
+            <div class="hero-media" data-reveal>
+                <span class="tape"></span>
+                <picture><source srcset="images/projects/marple/front-of-club-2025-05.webp" type="image/webp"><img src="images/projects/marple/front-of-club-2025-05.jpeg" alt="Marple Social and Forces Club"></picture>
+            </div>
+        </div>
+
+        <div class="hero-stats" data-reveal>
+            <div class="hero-stat">
+                <div class="v">£80k <em>→</em> £250k</div>
+                <div class="l">annual revenue</div>
+            </div>
+            <div class="hero-stat">
+                <div class="v">100 <em>→</em> 500+</div>
+                <div class="l">members</div>
+            </div>
+            <div class="hero-stat">
+                <div class="v">3<em>×</em></div>
+                <div class="l">growth, both axes</div>
+            </div>
+            <div class="hero-stat">
+                <div class="v">1 <em>platform</em></div>
+                <div class="l">replaces them all</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ───── GROWTH ───── -->
+<section class="growth">
+    <div class="wrap growth-inner">
+        <div>
+            <span class="kicker" data-reveal>what actually happened</span>
+            <h2 data-reveal>The numbers <em>tripled</em>.<br>So did Sundays off.</h2>
+            <p data-reveal>The platform isn't the headline. The headline is what it freed up. Once applications, renewals, payments, events, EPOS, the staff rota, the AGM, and the noticeboard all stopped being someone's evening job, the people running the club could actually run the club. Growth followed.</p>
+            <p data-reveal>None of it required a rebrand, a marketing agency, or a six-month consulting engagement. It required someone sitting down, working out what was actually broken, and building software that fits.</p>
+        </div>
+
+        <div class="growth-chart" data-reveal>
+            <div class="gc-row">
+                <span class="k">revenue, before</span>
+                <span class="bar" data-w="0.32"><span class="fill"></span></span>
+                <span class="v">£80k</span>
+            </div>
+            <div class="gc-row">
+                <span class="k">revenue, now</span>
+                <span class="bar" data-w="1"><span class="fill"></span></span>
+                <span class="v">£250k</span>
+            </div>
+            <div class="gc-row">
+                <span class="k">members, before</span>
+                <span class="bar" data-w="0.2"><span class="fill"></span></span>
+                <span class="v">100</span>
+            </div>
+            <div class="gc-row">
+                <span class="k">members, now</span>
+                <span class="bar" data-w="1"><span class="fill"></span></span>
+                <span class="v">500+</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ───── BRIEF ───── -->
+<section class="brief">
+    <div class="wrap brief-inner">
+        <div>
+            <span class="kicker" data-reveal>where we started</span>
+            <h2 data-reveal>One club, <em>a dozen</em> half-working tools, and a lot of paper.</h2>
+            <p data-reveal>Marple is a small members' club with a long history, a busy bar, regular events, a steward, a committee, a staff rota, and the kind of weekly admin load that quietly eats Wednesday evenings.</p>
+            <p data-reveal>Applications came in on paper. Renewals were tracked in a spreadsheet. EPOS sat in its own silo. Bookings went via the phone, were written on a wall calendar, and then re-typed. Events were promoted on a noticeboard. The committee minuted the AGM by hand. Nothing talked to anything else.</p>
+            <p data-reveal>The brief was simple. Make all of this one piece of software, owned by the club, that the people on the committee can actually use.</p>
+        </div>
+        <aside class="brief-side" data-reveal>
+            <h3>before, in summary</h3>
+            <ul>
+                <li>Paper application forms</li>
+                <li>Renewal spreadsheet</li>
+                <li>EPOS as an island</li>
+                <li>Wall calendar bookings</li>
+                <li>Noticeboard events</li>
+                <li>Hand-written AGM minutes</li>
+                <li>Email chains for the rota</li>
+                <li>Three SaaS subscriptions, not talking</li>
+            </ul>
+        </aside>
+    </div>
+</section>
+
+<!-- ───── PLATFORM ───── -->
+<section class="platform" id="platform">
+    <div class="wrap">
+        <div class="platform-head">
+            <span class="pill">what we built</span>
+            <h2 data-reveal>One platform. <em>Nine</em> jobs.</h2>
+        </div>
+
+        <div class="modules">
+            <div class="module" data-reveal>
+                <div class="icn">⌘</div>
+                <h3>Membership</h3>
+                <p>The whole lifecycle, from application to renewal to retirement. NFC member cards, Apple Wallet passes, dynamic pricing, multi-tier roles.</p>
+                <ul>
+                    <li>Online application</li>
+                    <li>Age &amp; reCAPTCHA</li>
+                    <li>NFC cards</li>
+                    <li>Apple Wallet</li>
+                    <li>Renewals</li>
+                </ul>
+            </div>
+            <div class="module" data-reveal>
+                <div class="icn">£</div>
+                <h3>Payments</h3>
+                <p>Stripe subscriptions for membership, Payment Intents for one-offs, terminal tokens behind the bar, and a clean reconciliation back to each member.</p>
+                <ul>
+                    <li>Stripe subs</li>
+                    <li>Payment Intents</li>
+                    <li>Terminal tokens</li>
+                    <li>Webhooks</li>
+                    <li>Receipts</li>
+                </ul>
+            </div>
+            <div class="module" data-reveal>
+                <div class="icn">★</div>
+                <h3>Events &amp; ticketing</h3>
+                <p>Events, capacity, member vs public pricing, Stripe ticket sales, QR check-in, confirmation emails. Featured events surface on the homepage.</p>
+                <ul>
+                    <li>Capacity</li>
+                    <li>Pricing tiers</li>
+                    <li>QR check-in</li>
+                    <li>Email confirmations</li>
+                </ul>
+            </div>
+            <div class="module" data-reveal>
+                <div class="icn">▦</div>
+                <h3>EPOS integration</h3>
+                <p>Till transactions imported and matched to members. Item categorisation, member balances, transaction history. The till stops being an island.</p>
+                <ul>
+                    <li>Transaction import</li>
+                    <li>Member matching</li>
+                    <li>Balances</li>
+                    <li>PLU items</li>
+                </ul>
+            </div>
+            <div class="module" data-reveal>
+                <div class="icn">◷</div>
+                <h3>Staff rota</h3>
+                <p>Shifts, time tracking, holiday requests, payroll hours, shift swap. Week and month views that work on a phone behind the bar.</p>
+                <ul>
+                    <li>Rota</li>
+                    <li>Time tracking</li>
+                    <li>Holiday</li>
+                    <li>Shift swaps</li>
+                    <li>Payroll hours</li>
+                </ul>
+            </div>
+            <div class="module" data-reveal>
+                <div class="icn">⌬</div>
+                <h3>Bookings &amp; rooms</h3>
+                <p>Function room. Members' lounge. Capacity, pricing, deposits, the lot. Stops the wall calendar / phone-call / re-type loop.</p>
+                <ul>
+                    <li>Room bookings</li>
+                    <li>Deposits</li>
+                    <li>Capacity</li>
+                    <li>Pricing</li>
+                </ul>
+            </div>
+            <div class="module" data-reveal>
+                <div class="icn">✉</div>
+                <h3>Communications</h3>
+                <p>Member emails (with PGP encryption where it matters), SMS via Twilio, in-app notifications with read state, audit-logged.</p>
+                <ul>
+                    <li>Email</li>
+                    <li>SMS</li>
+                    <li>Notifications</li>
+                    <li>PGP-encrypted</li>
+                </ul>
+            </div>
+            <div class="module" data-reveal>
+                <div class="icn">✦</div>
+                <h3>AGMs &amp; governance</h3>
+                <p>Attendance, audit logging, action tracking, disciplinary cases, survey responses. The committee's paperwork, but as software.</p>
+                <ul>
+                    <li>AGM attendance</li>
+                    <li>Audit log</li>
+                    <li>Action tracking</li>
+                    <li>Surveys</li>
+                </ul>
+            </div>
+            <div class="module" data-reveal>
+                <div class="icn">⌗</div>
+                <h3>Security &amp; auth</h3>
+                <p>Passkeys, TOTP, OIDC single sign-on, role-based access. Audit trail on every sensitive action. Built to PCI-DSS and OWASP discipline throughout.</p>
+                <ul>
+                    <li>WebAuthn</li>
+                    <li>TOTP</li>
+                    <li>OIDC SSO</li>
+                    <li>RBAC</li>
+                    <li>Audit logs</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ───── BY THE NUMBERS ───── -->
+<section class="numbers">
+    <div class="wrap">
+        <div class="numbers-head">
+            <span class="pill">by the numbers</span>
+            <h2 data-reveal>What "<em>one platform</em>" actually looks like under the bonnet.</h2>
+        </div>
+        <div class="numbers-grid">
+            <div class="nm-card" data-reveal>
+                <div class="n">126</div>
+                <div class="l">pages and routes</div>
+                <div class="d">Members, staff, committee, public &amp; admin views.</div>
+            </div>
+            <div class="nm-card" data-reveal>
+                <div class="n">82</div>
+                <div class="l">database tables</div>
+                <div class="d">Members, payments, events, rota, AGMs, audit trail.</div>
+            </div>
+            <div class="nm-card" data-reveal>
+                <div class="n">16</div>
+                <div class="l">core classes</div>
+                <div class="d">Application engine, DB, MFA, sessions, WebAuthn, more.</div>
+            </div>
+            <div class="nm-card" data-reveal>
+                <div class="n">9</div>
+                <div class="l">background services</div>
+                <div class="d">Crons, queue listeners, report generators.</div>
+            </div>
+            <div class="nm-card" data-reveal>
+                <div class="n">6+</div>
+                <div class="l">auth methods</div>
+                <div class="d">Password, passkey, TOTP, OIDC, WebAuthn, role-based.</div>
+            </div>
+            <div class="nm-card" data-reveal>
+                <div class="n">269</div>
+                <div class="l">commits in 2025 alone</div>
+                <div class="d">Active build. Not a "delivered and forgotten" project.</div>
+            </div>
+            <div class="nm-card" data-reveal>
+                <div class="n">8+</div>
+                <div class="l">email types</div>
+                <div class="d">Applications, confirmations, invoices, EPOS summaries.</div>
+            </div>
+            <div class="nm-card" data-reveal>
+                <div class="n">∞</div>
+                <div class="l">spreadsheets retired</div>
+                <div class="d">The Wednesday-night data-entry shift is no longer a thing.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ───── STACK ───── -->
+<section class="stack">
+    <div class="wrap">
+        <div class="stack-head">
+            <span class="pill">how it's built</span>
+            <h2 data-reveal>The <em>stack</em>, briefly.</h2>
+        </div>
+        <div class="stack-grid">
+            <div class="stack-card" data-reveal>
+                <div class="lbl">// application</div>
+                <h3>Backend</h3>
+                <ul>
+                    <li>PHP 8 application</li>
+                    <li>MariaDB</li>
+                    <li>Database-backed sessions</li>
+                    <li>RabbitMQ for async jobs</li>
+                    <li>Cron-driven schedulers</li>
+                </ul>
+            </div>
+            <div class="stack-card" data-reveal>
+                <div class="lbl">// frontend</div>
+                <h3>Interface</h3>
+                <ul>
+                    <li>Bootstrap 5 + Tailwind utilities</li>
+                    <li>System dark mode</li>
+                    <li>Mobile-first staff &amp; member portals</li>
+                    <li>Print-friendly invoices &amp; tickets</li>
+                </ul>
+            </div>
+            <div class="stack-card" data-reveal>
+                <div class="lbl">// services</div>
+                <h3>Integrations</h3>
+                <ul>
+                    <li>Stripe (subs, intents, terminal)</li>
+                    <li>Twilio SMS</li>
+                    <li>Authentik OIDC SSO</li>
+                    <li>Apple Wallet passes</li>
+                    <li>NFC card systems</li>
+                </ul>
+            </div>
+            <div class="stack-card" data-reveal>
+                <div class="lbl">// security</div>
+                <h3>Security</h3>
+                <ul>
+                    <li>WebAuthn passkeys</li>
+                    <li>TOTP MFA</li>
+                    <li>OIDC for staff</li>
+                    <li>Role-based access control</li>
+                    <li>PGP-encrypted sensitive mail</li>
+                    <li>PCI-DSS &amp; OWASP discipline throughout</li>
+                </ul>
+            </div>
+            <div class="stack-card" data-reveal>
+                <div class="lbl">// hosting</div>
+                <h3>Operations</h3>
+                <ul>
+                    <li>Docker Compose, four services</li>
+                    <li>Nginx + PHP-FPM</li>
+                    <li>MariaDB on dedicated node</li>
+                    <li>RabbitMQ DLQ listener</li>
+                    <li>Audit log on critical paths</li>
+                </ul>
+            </div>
+            <div class="stack-card" data-reveal>
+                <div class="lbl">// data</div>
+                <h3>Schema</h3>
+                <ul>
+                    <li>82 tables, foreign-keyed</li>
+                    <li>~3,600 lines of schema</li>
+                    <li>Single source of truth for member data</li>
+                    <li>Audit log on AGM, members, payments</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ───── OUTCOME ───── -->
+<section class="outcome">
+    <div class="wrap">
+        <div class="outcome-inner" data-reveal>
+            <span class="doodle">the bit that matters</span>
+            <h2>What changed for the <em>people</em>?</h2>
+            <p>The numbers are nice, but they're a downstream effect. The work was about giving the people who actually run the club back their evenings. Here's what stopped happening:</p>
+            <ul class="outcome-list">
+                <li>Wednesday-night data entry</li>
+                <li>Renewal chase-up phone calls</li>
+                <li>"Did anyone book that room?"</li>
+                <li>Lost paper applications</li>
+                <li>Reconciling the till by hand</li>
+                <li>AGM minutes typed twice</li>
+                <li>Staff messaging each other to swap shifts</li>
+                <li>Renewal reminders, manually</li>
+            </ul>
+            <p>And here's what started happening: events sold out, the membership grew, the bar got busier, and the committee started using the words "this year" and "next year" instead of "this week". That's the actual case study. The platform's just how we got there.</p>
+            <div style="margin-top: 1.5rem; display: flex; gap: 0.6rem; flex-wrap: wrap;">
+                <a class="btn" href="index.html#contact">Got a similar mess? Tell us →</a>
+                <a class="btn ghost" href="poynton-wmc.html">See another case study</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ───── PREV / NEXT ───── -->
+<section class="wrap">
+    <div class="case-nav">
+        <a href="index.html#work">
+            <span class="k">← back to</span>
+            <span class="v">All work</span>
+        </a>
+        <a class="next" href="poynton-wmc.html">
+            <span class="k">next case study →</span>
+            <span class="v">Poynton WMC, lighting</span>
+        </a>
+    </div>
+</section>
+
+</main>
+
+<!-- ───── FOOT BAND ───── -->
+<section class="foot-band">
+    <div class="wrap foot-band-inner">
+        <div>
+            <span class="lede">If you've got something awkward to build…</span>
+            <h3>Drop us a line.</h3>
+            <p>We answer our own email. No funnel, no account-manager, no discovery-call to book a discovery-call.</p>
+            <div style="margin-top: 1.25rem;"><a class="btn small" href="mailto:theteam@addedpixels.com">theteam@addedpixels.com →</a></div>
+        </div>
+        <div>
+            <h3>Reach us</h3>
+            <ul>
+                <li><a href="tel:+441625803040"><span>+44 (0) 1625 80 30 40</span><span class="k">UK</span></a></li>
+                <li><a href="tel:+443334431009"><span>+44 (0) 33 3443 1009</span><span class="k">UK non-geo</span></a></li>
+                <li><a href="tel:+17029049404"><span>+1 702 904 9404</span><span class="k">US</span></a></li>
+                <li><a href="mailto:theteam@addedpixels.com"><span>theteam@addedpixels.com</span><span class="k">email</span></a></li>
+            </ul>
+        </div>
+        <div>
+            <h3>Other places</h3>
+            <ul>
+                <li><a href="index.html#do"><span>What we do</span><span class="k">→</span></a></li>
+                <li><a href="index.html#work"><span>Selected work</span><span class="k">→</span></a></li>
+                <li><a href="about.html"><span>About</span><span class="k">→</span></a></li>
+                <li><a href="https://qtesi.us" target="_blank" rel="noopener"><span>Qtesius platform</span><span class="k">↗</span></a></li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<footer class="foot">
+    <div class="wrap row">
+        <span>© 2014 — 2026 addedPIXELS · Manchester · UK</span>
+        <span>made by the people who'll also answer the phone</span>
+        <a href="mailto:theteam@addedpixels.com">theteam@addedpixels.com</a>
+    </div>
+</footer>
+
+<script src="js/site-2026.js"></script>
+<script>
+(() => {
+    /* Animate growth bars when in view */
+    const bars = document.querySelectorAll('.gc-row .bar');
+    bars.forEach(b => {
+        const w = b.dataset.w || '1';
+        b.style.setProperty('--w', w);
+    });
+    const io = new IntersectionObserver(es => {
+        es.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+        });
+    }, { threshold: 0.4 });
+    bars.forEach(b => io.observe(b));
+})();
+</script>
+</body>
+</html>

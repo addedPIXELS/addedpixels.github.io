@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Masonic Tracker · case study — addedPIXELS</title>
+<meta name="description" content="Two codebases, one product. A multi-tenant SaaS for Freemasonry (lodges, chapters, provinces, ranks, events, charity transparency, Stripe billing, calendar sync) plus its public marketing site. Built ground-up.">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="addedPIXELS">
+<meta property="og:url" content="https://addedpixels.com/masonic-tracker.html">
+<meta property="og:title" content="Masonic Tracker, multi-tenant SaaS for Freemasonry · addedPIXELS">
+<meta property="og:description" content="Two codebases, one product. Lodges, chapters, provinces, ranks, calendar sync, charity tracking, Stripe billing. Your data stays yours.">
+<meta property="og:image" content="https://addedpixels.com/images/share/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@addedPIXELS">
+<meta name="twitter:title" content="Masonic Tracker, multi-tenant SaaS for Freemasonry · addedPIXELS">
+<meta name="twitter:description" content="Two codebases, one product. Lodges, chapters, provinces, ranks, calendar sync, charity tracking, Stripe billing. Your data stays yours.">
+<meta name="twitter:image" content="https://addedpixels.com/images/share/og-default.png">
+
+<link rel="shortcut icon" type="image/png" href="images/logos/addedpixels_favicon_dark.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Manrope:wght@400;500;600;700&family=Caveat:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site-2026.css">
+
+<style>
+/* ──── HERO ──── */
+.case-hero { padding: 4rem 0 3rem; position: relative; }
+.case-crumb {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: var(--hand); color: var(--green-deep);
+    font-size: 1.2rem; text-decoration: none;
+    margin-bottom: 1rem; 
+}
+.case-crumb:hover { color: var(--terracotta); }
+.case-meta {
+    display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem; color: var(--ink-mute);
+    text-transform: uppercase; letter-spacing: 0.08em;
+}
+.case-meta span { display: inline-flex; align-items: center; gap: 0.4rem; }
+.case-meta span::before { content: "●"; color: var(--green); }
+
+.case-hero h1 {
+    font-family: var(--display);
+    font-weight: 350;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-size: clamp(2.6rem, 6vw, 5.2rem);
+    line-height: 1; letter-spacing: -0.03em;
+    margin-bottom: 1.5rem; max-width: 20ch;
+}
+.case-hero h1 em { font-style: italic; color: var(--green-deep); font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
+
+.case-lede { font-size: 1.25rem; color: var(--ink-soft); max-width: 60ch; margin-bottom: 2.5rem; }
+
+.hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 3rem; }
+.hero-stat {
+    background: var(--cream); border: 1px solid var(--rule); border-radius: 18px;
+    padding: 1.5rem 1.25rem;  transition: transform 0.2s;
+}
+.hero-stat:nth-child(2) {  }
+.hero-stat:nth-child(3) {  }
+.hero-stat:nth-child(4) {  }
+.hero-stat:hover { transform: translateY(-2px); }
+.hero-stat .v {
+    font-family: var(--display); font-weight: 350;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1;
+    letter-spacing: -0.025em; margin-bottom: 0.4rem;
+}
+.hero-stat .v em { font-style: italic; color: var(--green-deep); font-variation-settings: "opsz" 144, "SOFT" 100; }
+.hero-stat .l { font-family: var(--hand); color: var(--ink-mute); font-size: 1.1rem; }
+@media (max-width: 820px) { .hero-stats { grid-template-columns: repeat(2, 1fr); } }
+
+/* two-column hero layout */
+.case-hero-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+.hero-media {
+    position: relative;
+    aspect-ratio: 5 / 4;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    box-shadow: 8px 10px 0 var(--rule-soft);
+    background: var(--cream-deep);
+}
+.hero-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-media .tape { position: absolute; top: -8px; left: 30%; z-index: 2; }
+
+@media (max-width: 900px) {
+    .case-hero-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .hero-media { aspect-ratio: 16 / 10; }
+}
+
+/* brief */
+.brief { padding: 4rem 0; }
+.brief-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+.brief h2 {
+    font-family: var(--display); font-weight: 350;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-size: clamp(1.8rem, 3.6vw, 2.8rem);
+    line-height: 1.05; letter-spacing: -0.025em;
+    margin-bottom: 1.25rem; max-width: 22ch;
+}
+.brief h2 em { font-style: italic; color: var(--green-deep); font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
+.brief p { color: var(--ink-soft); font-size: 1.05rem; margin-bottom: 1rem; max-width: 58ch; }
+.brief-side {
+    background: var(--cream); border: 1px solid var(--rule); border-radius: 18px;
+    padding: 1.75rem; 
+    box-shadow: 5px 5px 0 var(--rule-soft);
+}
+.brief-side h3 { font-family: var(--hand); color: var(--terracotta); font-size: 1.4rem;  display: inline-block; margin-bottom: 0.75rem; }
+.brief-side ul { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
+.brief-side li {
+    padding: 0.55rem 0.85rem;
+    background: var(--paper); border: 1px solid var(--rule);
+    border-radius: 10px; font-size: 0.93rem;
+    color: var(--ink-mute);
+    text-decoration: line-through;
+    text-decoration-color: var(--terracotta);
+    text-decoration-thickness: 2px;
+}
+.brief-side li::before { content: "✕  "; color: var(--terracotta); font-weight: bold; }
+@media (max-width: 820px) { .brief-inner { grid-template-columns: 1fr; gap: 2rem; } }
+
+/* platform */
+.platform { padding: 5rem 0; background: var(--cream-soft); border-top: 1px dashed var(--rule); border-bottom: 1px dashed var(--rule); }
+.platform-head { display: grid; grid-template-columns: auto 1fr; gap: 3rem; align-items: end; margin-bottom: 3rem; }
+.platform-head h2 {
+    font-family: var(--display); font-weight: 350;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-size: clamp(2rem, 4.5vw, 3.5rem); line-height: 1;
+    letter-spacing: -0.03em; max-width: 22ch;
+}
+.platform-head h2 em { font-style: italic; color: var(--green-deep); font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
+.modules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+.module {
+    background: var(--paper); border: 1px solid var(--rule);
+    border-radius: 18px; padding: 1.75rem;
+    transition: transform 0.25s, box-shadow 0.25s; position: relative;
+}
+.module:hover { transform: translateY(-3px); box-shadow: 5px 5px 0 var(--rule-soft); }
+.module .icn {
+    width: 44px; height: 44px;
+    background: var(--cream); border: 1px solid var(--rule);
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    font-family: var(--display); color: var(--green-deep); font-size: 1.3rem;
+    margin-bottom: 1rem; 
+}
+.module h3 { font-family: var(--display); font-weight: 400; font-variation-settings: "opsz" 32; font-size: 1.25rem; margin-bottom: 0.4rem; letter-spacing: -0.015em; }
+.module p { color: var(--ink-mute); font-size: 0.93rem; margin-bottom: 1rem; }
+.module ul { list-style: none; padding-top: 0.75rem; border-top: 1px dashed var(--rule); display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.module ul li { font-size: 0.78rem; color: var(--ink-soft); background: var(--cream); border: 1px solid var(--rule); padding: 0.2rem 0.55rem; border-radius: 999px; font-weight: 500; }
+@media (max-width: 820px) { .modules { grid-template-columns: repeat(2, 1fr); } .platform-head { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .modules { grid-template-columns: 1fr; } }
+
+/* marketing-site band */
+.msite { padding: 5rem 0; }
+.msite-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+.msite h2 {
+    font-family: var(--display); font-weight: 350;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-size: clamp(2rem, 4.5vw, 3.4rem);
+    line-height: 1.05; letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+}
+.msite h2 em { font-style: italic; color: var(--green-deep); font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
+.msite p { color: var(--ink-soft); font-size: 1.05rem; margin-bottom: 1rem; max-width: 56ch; }
+.msite-card {
+    background: var(--cream); border: 1px solid var(--rule);
+    border-radius: 18px; padding: 1.75rem;
+     box-shadow: 5px 5px 0 var(--rule-soft);
+}
+.msite-card .lbl { font-family: var(--hand); color: var(--terracotta); font-size: 1.2rem;  display: inline-block; margin-bottom: 0.5rem; }
+.msite-card h3 { font-family: var(--display); font-size: 1.3rem; margin-bottom: 0.5rem; }
+.msite-card ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 1rem; }
+.msite-card ul li {
+    padding: 0.5rem 0.7rem;
+    background: var(--paper); border: 1px solid var(--rule);
+    border-radius: 10px; font-size: 0.9rem;
+    color: var(--ink); display: flex; align-items: center; gap: 0.5rem;
+}
+.msite-card ul li::before { content: "›"; color: var(--green-deep); font-weight: 700; }
+@media (max-width: 820px) {
+    .msite-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .msite-card ul { grid-template-columns: 1fr; }
+}
+
+/* numbers band */
+.numbers { padding: 5rem 0; background: var(--cream-soft); border-top: 1px dashed var(--rule); border-bottom: 1px dashed var(--rule); }
+.numbers-head { text-align: center; margin-bottom: 3rem; }
+.numbers-head h2 {
+    font-family: var(--display); font-weight: 350;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    letter-spacing: -0.03em; line-height: 1;
+}
+.numbers-head h2 em { font-style: italic; color: var(--green-deep); font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
+.numbers-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-top: 2.5rem; }
+.nm-card {
+    background: var(--invert-bg); color: var(--invert-text);
+    border: 1px solid var(--invert-bg-soft); border-radius: 18px;
+    padding: 2rem 1.5rem;
+}
+.nm-card .n {
+    font-family: var(--display); font-weight: 350;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-size: clamp(2.2rem, 4vw, 3.5rem); line-height: 1;
+    letter-spacing: -0.03em; color: var(--green); margin-bottom: 0.6rem;
+}
+.nm-card .l { font-family: var(--hand); color: var(--invert-text-soft); font-size: 1.1rem; }
+.nm-card .d { font-size: 0.85rem; color: var(--invert-text-mute); margin-top: 0.5rem; }
+@media (max-width: 820px) { .numbers-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* stack */
+.stack { padding: 5rem 0; }
+.stack-head { margin-bottom: 2.5rem; }
+.stack-head h2 {
+    font-family: var(--display); font-weight: 350;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.03em; line-height: 1;
+}
+.stack-head h2 em { font-style: italic; color: var(--green-deep); font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
+.stack-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+.stack-card { background: var(--cream); border: 1px solid var(--rule); border-radius: 18px; padding: 1.5rem; }
+.stack-card .lbl {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem; color: var(--green-deep);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+}
+.stack-card h3 { font-family: var(--display); font-size: 1.15rem; margin-bottom: 0.75rem; letter-spacing: -0.01em; }
+.stack-card ul { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+.stack-card li { font-size: 0.92rem; color: var(--ink-soft); display: flex; align-items: center; gap: 0.5rem; padding-left: 1.1rem; position: relative; }
+.stack-card li::before { content: "›"; color: var(--green); font-weight: 700; position: absolute; left: 0; }
+@media (max-width: 820px) { .stack-grid { grid-template-columns: 1fr; } }
+
+/* outcome */
+.outcome { padding: 5rem 0; background: var(--cream-soft); border-top: 1px dashed var(--rule); }
+.outcome-inner {
+    background: var(--cream); border: 1px solid var(--rule); border-radius: 18px;
+    padding: 3rem; 
+    box-shadow: 8px 8px 0 var(--rule-soft);
+    background-image: repeating-linear-gradient(transparent 0 31px, var(--rule-soft) 31px 32px);
+}
+.outcome-inner .doodle { font-family: var(--hand); color: var(--terracotta); font-size: 1.3rem;  display: inline-block; margin-bottom: 0.5rem; }
+.outcome-inner h2 {
+    font-family: var(--display); font-weight: 350;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-size: clamp(2rem, 4.5vw, 3.4rem);
+    line-height: 1.05; letter-spacing: -0.03em;
+    margin-bottom: 1rem; max-width: 22ch;
+}
+.outcome-inner h2 em { font-style: italic; color: var(--green-deep); font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
+.outcome-inner p { color: var(--ink-soft); font-size: 1.1rem; margin-bottom: 1rem; max-width: 64ch; }
+.outcome-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1.5rem 0; }
+.outcome-list li {
+    padding: 0.6rem 0.85rem; background: var(--paper);
+    border: 1px solid color-mix(in srgb, var(--green) 30%, var(--rule));
+    border-radius: 10px; font-size: 0.95rem;
+}
+.outcome-list li::before { content: "✓  "; color: var(--green-deep); font-weight: bold; }
+@media (max-width: 700px) {
+    .outcome-list { grid-template-columns: 1fr; }
+    .outcome-inner { padding: 2rem 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="head">
+    <div class="wrap head-inner">
+        <a class="brand" href="/">
+            <img class="logo-dark" src="images/logos/addedpixels_logo_standard_dark.png" alt="addedPIXELS">
+            <img class="logo-light" src="images/logos/addedpixels_logo_standard_light.png" alt="addedPIXELS">
+            <span class="brand-hand">since '14</span>
+        </a>
+        <nav class="nav">
+            <a href="index.html">Home</a>
+            <a href="index.html#do">What we do</a>
+            <li class="nav-drop" style="list-style:none;"><a href="index.html#work" tabindex="0">Work <span class="chev">▾</span></a>
+                <ul class="nav-drop-menu is-work">
+                    <li><a href="marple.html" class="case-entry">
+                        <span class="t">Marple Social and Forces Club</span>
+                        <span class="s">the operations platform</span>
+                    </a></li>
+                    <li><a href="masonic-tracker.html" class="case-entry is-active">
+                        <span class="t">Masonic Tracker</span>
+                        <span class="s">SaaS for Freemasonry</span>
+                    </a></li>
+                    <li><a href="poynton-wmc.html" class="case-entry">
+                        <span class="t">Poynton WMC</span>
+                        <span class="s">intelligent lighting</span>
+                    </a></li>
+                    <li class="div"></li>
+                    <li><a href="index.html#work" class="case-entry case-all">
+                        <span class="t">All work →</span>
+                    </a></li>
+                </ul>
+            </li>
+            <li class="nav-drop" style="list-style:none;"><a href="#" tabindex="0">Apps <span class="chev">▾</span></a>
+                <ul class="nav-drop-menu">
+                    <li><a href="speedlap.html">SpeedLap</a></li>
+                    <li><a href="speedlap-insights.html">SpeedLap Insights</a></li>
+                    <li><a href="chordlibre.html">ChordLibre</a></li>
+                    <li><a href="showcontrol.html">ShowControl</a></li>
+                </ul>
+            </li>
+            <a href="about.html">About</a>
+            <a class="cta" href="index.html#contact">Say hi →</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+
+<!-- ───── HERO ───── -->
+<section class="case-hero">
+    <div class="wrap">
+        <a class="case-crumb" href="index.html#work" data-reveal>← back to work</a>
+        <div class="case-meta" data-reveal>
+            <span>Case 03</span>
+            <span>SaaS &amp; marketing site</span>
+            <span>Masonic Tracker</span>
+            <span>Ongoing, since 2025</span>
+        </div>
+
+        <div class="case-hero-grid">
+            <div class="case-hero-text">
+                <h1 data-reveal>
+                    Multi-tenant SaaS,<br>
+                    <em>built for</em><br>
+                    Freemasonry.
+                </h1>
+                <p class="case-lede" data-reveal>
+                    Two codebases, one product. The platform itself runs lodges, chapters, provinces, ranks, appointments, events, calendar sync, charity tracking and Stripe billing. Alongside it, the public marketing site sells the thing. Built ground-up for a vertical that didn't have a product. Whatever a subscription does, your data stays yours.
+                </p>
+            </div>
+            <div class="hero-media" data-reveal>
+                <span class="tape"></span>
+                <picture><source srcset="images/projects/masonic-tracker/masonicdiary.webp" type="image/webp"><img src="images/projects/masonic-tracker/masonicdiary.png" alt="Masonic Tracker"></picture>
+            </div>
+        </div>
+
+        <div class="hero-stats" data-reveal>
+            <div class="hero-stat">
+                <div class="v">2 <em>codebases</em></div>
+                <div class="l">platform + marketing</div>
+            </div>
+            <div class="hero-stat">
+                <div class="v">35</div>
+                <div class="l">database tables</div>
+            </div>
+            <div class="hero-stat">
+                <div class="v">258</div>
+                <div class="l">commits in 7 months</div>
+            </div>
+            <div class="hero-stat">
+                <div class="v">100<em>%</em></div>
+                <div class="l">surplus to charity</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ───── BRIEF ───── -->
+<section class="brief">
+    <div class="wrap brief-inner">
+        <div>
+            <span class="kicker" data-reveal>where we started</span>
+            <h2 data-reveal>Freemasonry didn't have a <em>product</em> built for it.</h2>
+            <p data-reveal>Freemasonry has a structure most software pretends doesn't exist. Lodges, chapters, provinces, ranks, appointments. Each with their own conventions. People hold ranks, take appointments, attend each other's meetings, log charity work, and care a great deal about who can see which bit of any of that.</p>
+            <p data-reveal>The off-the-shelf alternatives were a tangle of paper diaries, generic calendars, half-fitting CRMs, and forum threads. Nothing modelled the domain. Nothing handled the privacy properly. Nothing returned the surplus to the Masonic Charitable Foundation.</p>
+            <p data-reveal>The brief was to build the product that should have existed. A SaaS people would actually subscribe to, with the domain modelled properly, with charity as a first-class concept, and with a public site that explains it without sounding like an enterprise vendor.</p>
+        </div>
+        <aside class="brief-side" data-reveal>
+            <h3>what the alternatives didn't do</h3>
+            <ul>
+                <li>Model lodges, chapters, provinces</li>
+                <li>Handle ranks &amp; appointments properly</li>
+                <li>Per-entity visibility (private / shared / public)</li>
+                <li>iCal feeds with per-visibility tokens</li>
+                <li>Charity transaction tracking</li>
+                <li>Subscription billing for the niche</li>
+                <li>Member-aware audit trails</li>
+                <li>Anything that respected the vertical</li>
+            </ul>
+        </aside>
+    </div>
+</section>
+
+<!-- ───── PLATFORM ───── -->
+<section class="platform">
+    <div class="wrap">
+        <div class="platform-head">
+            <span class="pill">what we built</span>
+            <h2 data-reveal>One platform. <em>Nine</em> jobs, properly.</h2>
+        </div>
+
+        <div class="modules">
+            <div class="module" data-reveal>
+                <div class="icn">⌬</div>
+                <h3>Multi-tenant workspaces</h3>
+                <p>Path-based and subdomain tenancy. Per-province, per-lodge isolation with seamless workspace switching for members in more than one.</p>
+                <ul>
+                    <li>Path tenancy</li>
+                    <li>Subdomain support</li>
+                    <li>Workspace switching</li>
+                </ul>
+            </div>
+            <div class="module" data-reveal>
+                <div class="icn">♛</div>
+                <h3>Domain model</h3>
+                <p>The actual structure of Freemasonry, modelled properly. Lodges, chapters, provinces, ranks, appointments, provincial officers.</p>
+                <ul>
+                    <li>Lodges &amp; chapters</li>
+                    <li>Provinces</li>
+                    <li>Ranks &amp; appointments</li>
+                    <li>Provincial officers</li>
+                </ul>
+            </div>
+            <div class="module" data-reveal>
+                <div class="icn">★</div>
+                <h3>Events &amp; visits</h3>
+                <p>Calendar entities with proper privacy modes. Members can log visits, plan appointments, and run meetings without leaking detail to the wrong audience.</p>
+                <ul>
+                    <li>Events</li>
+                    <li>Visits</li>
+                    <li>Meetings</li>
+                    <li>Privacy modes</li>
+                </ul>
+            </div>
+            <div class="module" data-reveal>
+                <div class="icn">◷</div>
+                <h3>Calendar sync</h3>
+                <p>iCal feeds with per-visibility tokens. Each member's diary appears in their own calendar app, with the right things hidden from the wrong audiences.</p>
+                <ul>
+                    <li>iCal feeds</li>
+                    <li>Per-visibility tokens</li>
+                    <li>Reminder prefs</li>
+                </ul>
+            </div>
+            <div class="module" data-reveal>
+                <div class="icn">£</div>
+                <h3>Subscription billing</h3>
+                <p>Stripe-driven monthly and annual billing. Trial periods, cancellation flows, payment-method management, annual savings, all reconciled to the member.</p>
+                <ul>
+                    <li>Stripe subs</li>
+                    <li>Trials</li>
+                    <li>Annual savings</li>
+                    <li>Cancellations</li>
+                </ul>
+            </div>
+            <div class="module" data-reveal>
+                <div class="icn">⌥</div>
+                <h3>Your data stays yours</h3>
+                <p>If a subscription lapses, nothing disappears. The workspace stays in place, fully readable, members and history intact. Resume any time and write access turns straight back on.</p>
+                <ul>
+                    <li>Read-only on lapse</li>
+                    <li>Full history preserved</li>
+                    <li>Members &amp; data intact</li>
+                    <li>Resume any time</li>
+                </ul>
+            </div>
+            <div class="module" data-reveal>
+                <div class="icn">✦</div>
+                <h3>Charity tracking</h3>
+                <p>Charitable transactions are a first-class concept. Members log donations, the platform tracks the surplus, the surplus goes to the Masonic Charitable Foundation. Public-facing transparency reporting.</p>
+                <ul>
+                    <li>Charitable transactions</li>
+                    <li>Gift Aid</li>
+                    <li>MCF reporting</li>
+                    <li>Surplus tracked</li>
+                </ul>
+            </div>
+            <div class="module" data-reveal>
+                <div class="icn">✓</div>
+                <h3>Checklists &amp; reminders</h3>
+                <p>Custom checklist templates per workspace. Items, deadlines, reminders driven by scheduled jobs so things actually happen on time.</p>
+                <ul>
+                    <li>Custom templates</li>
+                    <li>Reminders</li>
+                    <li>Scheduled jobs</li>
+                </ul>
+            </div>
+            <div class="module" data-reveal>
+                <div class="icn">✉</div>
+                <h3>Communications</h3>
+                <p>Queued email with templated HTML and plain-text variants. Slack webhooks for ops. SMTP integration. All async, all retried, all logged.</p>
+                <ul>
+                    <li>Queued email</li>
+                    <li>Slack webhooks</li>
+                    <li>SMTP</li>
+                    <li>Async retries</li>
+                </ul>
+            </div>
+            <div class="module" data-reveal>
+                <div class="icn">⌗</div>
+                <h3>Security &amp; auth</h3>
+                <p>Two-factor auth with backup codes. Role-based access control. Audit logging on sensitive paths. Soft deletes for compliance. Granular visibility per entity. Built to current industry discipline throughout.</p>
+                <ul>
+                    <li>2FA + backup codes</li>
+                    <li>RBAC</li>
+                    <li>Audit logs</li>
+                    <li>Soft deletes</li>
+                    <li>Granular visibility</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ───── MARKETING SITE BAND ───── -->
+<section class="msite">
+    <div class="wrap msite-inner">
+        <div>
+            <span class="kicker" data-reveal>the second codebase</span>
+            <h2 data-reveal>A public site that <em>sells</em> the thing properly.</h2>
+            <p data-reveal>The platform needed somewhere to land. So the second codebase is the marketing site, sat alongside the SaaS in production, doing the job of explaining the product to a Masonic audience without sounding like a vendor.</p>
+            <p data-reveal>Lightweight. Fast. Accessible. No tracking by default. The charity-first promise is on the homepage, the price (£2.50 a month, or £25 a year, with a 30-day trial that doesn't ask for a card) is on the pricing page, and the FAQ answers the actual questions members ask.</p>
+        </div>
+        <aside class="msite-card" data-reveal>
+            <span class="lbl">masonicdiary.co.uk</span>
+            <h3>The marketing site, briefly.</h3>
+            <ul>
+                <li>9 public pages</li>
+                <li>Responsive, mobile-first</li>
+                <li>Accessible (WCAG 2.1 AA)</li>
+                <li>Lightweight Alpine container</li>
+                <li>Nginx + PHP-FPM</li>
+                <li>Gzip &amp; cache rules</li>
+                <li>Slack-webhook forms</li>
+                <li>No analytics by default</li>
+            </ul>
+        </aside>
+    </div>
+</section>
+
+<!-- ───── NUMBERS ───── -->
+<section class="numbers">
+    <div class="wrap">
+        <div class="numbers-head">
+            <span class="pill">by the numbers</span>
+            <h2 data-reveal>What "<em>two codebases</em>" actually looks like.</h2>
+        </div>
+        <div class="numbers-grid">
+            <div class="nm-card" data-reveal>
+                <div class="n">258</div>
+                <div class="l">commits in 7 months</div>
+                <div class="d">Active build, ongoing iteration. Not a "delivered and forgotten" project.</div>
+            </div>
+            <div class="nm-card" data-reveal>
+                <div class="n">35</div>
+                <div class="l">database tables</div>
+                <div class="d">Members, lodges, chapters, provinces, ranks, events, charity transactions.</div>
+            </div>
+            <div class="nm-card" data-reveal>
+                <div class="n">221</div>
+                <div class="l">PHP files</div>
+                <div class="d">Routes, classes, helpers, controllers. Across the platform application.</div>
+            </div>
+            <div class="nm-card" data-reveal>
+                <div class="n">8</div>
+                <div class="l">background jobs</div>
+                <div class="d">Trial expiries, subscription syncs, email queue, Slack notifications, reminders.</div>
+            </div>
+            <div class="nm-card" data-reveal>
+                <div class="n">9</div>
+                <div class="l">marketing pages</div>
+                <div class="d">Home, features, pricing, transparency, about, FAQ, contact, legal.</div>
+            </div>
+            <div class="nm-card" data-reveal>
+                <div class="n">2</div>
+                <div class="l">codebases shipped</div>
+                <div class="d">The SaaS itself and its public site. Both in active production.</div>
+            </div>
+            <div class="nm-card" data-reveal>
+                <div class="n">£2.50</div>
+                <div class="l">per month, or £25 annually</div>
+                <div class="d">30-day trial. No card up front. Charity-first pricing.</div>
+            </div>
+            <div class="nm-card" data-reveal>
+                <div class="n">100<em>%</em></div>
+                <div class="l">surplus to MCF</div>
+                <div class="d">Every penny of surplus revenue goes to the Masonic Charitable Foundation.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ───── STACK ───── -->
+<section class="stack">
+    <div class="wrap">
+        <div class="stack-head">
+            <span class="pill">how it's built</span>
+            <h2 data-reveal>The <em>stack</em>, briefly.</h2>
+        </div>
+        <div class="stack-grid">
+            <div class="stack-card" data-reveal>
+                <div class="lbl">// application</div>
+                <h3>Backend</h3>
+                <ul>
+                    <li>PHP 8.2 application</li>
+                    <li>MariaDB</li>
+                    <li>Redis caching &amp; sessions</li>
+                    <li>Stripe SDK</li>
+                    <li>Cron-driven jobs</li>
+                </ul>
+            </div>
+            <div class="stack-card" data-reveal>
+                <div class="lbl">// frontend</div>
+                <h3>Platform UI</h3>
+                <ul>
+                    <li>Bootstrap 5 + custom CSS</li>
+                    <li>System dark mode</li>
+                    <li>Apple-inspired UI patterns</li>
+                    <li>Mobile-first member portal</li>
+                    <li>Print-friendly reports</li>
+                </ul>
+            </div>
+            <div class="stack-card" data-reveal>
+                <div class="lbl">// marketing site</div>
+                <h3>Public site</h3>
+                <ul>
+                    <li>Alpine Linux container</li>
+                    <li>Nginx + PHP-FPM</li>
+                    <li>Supervisord</li>
+                    <li>Gzip, caching, lazy loading</li>
+                    <li>WCAG 2.1 AA</li>
+                </ul>
+            </div>
+            <div class="stack-card" data-reveal>
+                <div class="lbl">// integrations</div>
+                <h3>Services</h3>
+                <ul>
+                    <li>Stripe (subs, trials, payment methods)</li>
+                    <li>Slack webhooks for ops</li>
+                    <li>iCal feeds, tokenised</li>
+                    <li>SMTP / Mailhog</li>
+                </ul>
+            </div>
+            <div class="stack-card" data-reveal>
+                <div class="lbl">// security</div>
+                <h3>Security</h3>
+                <ul>
+                    <li>2FA with backup codes</li>
+                    <li>Role-based access control</li>
+                    <li>Audit logs on sensitive paths</li>
+                    <li>Soft deletes for compliance</li>
+                    <li>Granular per-entity visibility</li>
+                </ul>
+            </div>
+            <div class="stack-card" data-reveal>
+                <div class="lbl">// hosting</div>
+                <h3>Operations</h3>
+                <ul>
+                    <li>Docker Compose</li>
+                    <li>Cron sidecars</li>
+                    <li>Redis-backed sessions</li>
+                    <li>PHP-FPM behind Nginx</li>
+                    <li>Two services in production</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ───── OUTCOME ───── -->
+<section class="outcome">
+    <div class="wrap">
+        <div class="outcome-inner" data-reveal>
+            <span class="doodle">the bit that matters</span>
+            <h2>A product that didn't <em>exist</em>, now does.</h2>
+            <p>This isn't a website. It isn't a CMS. It isn't a Stripe wrapper. It's a vertical SaaS shipped in seven months, with two codebases in production, a working subscription business model, and a charity-first commercial promise.</p>
+            <ul class="outcome-list">
+                <li>Domain-aware product</li>
+                <li>Subscription business model</li>
+                <li>Charity-first pricing</li>
+                <li>Privacy that respects the vertical</li>
+                <li>Two codebases, both shipped</li>
+                <li>Active feature iteration</li>
+                <li>Marketing site converting</li>
+                <li>Surplus going to the MCF</li>
+            </ul>
+            <p>If you've got a niche, an audience that's been quietly underserved, and an idea for the product nobody's built yet, this is the kind of build we like most.</p>
+            <div style="margin-top: 1.5rem; display: flex; gap: 0.6rem; flex-wrap: wrap;">
+                <a class="btn" href="index.html#contact">Got a niche product idea? Tell us →</a>
+                <a class="btn ghost" href="marple.html">See another case study</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ───── PREV / NEXT ───── -->
+<section class="wrap">
+    <div class="case-nav">
+        <a href="marple.html">
+            <span class="k">← previous</span>
+            <span class="v">Marple Social and Forces Club</span>
+        </a>
+        <a class="next" href="poynton-wmc.html">
+            <span class="k">next case study →</span>
+            <span class="v">Poynton WMC, lighting</span>
+        </a>
+    </div>
+</section>
+
+</main>
+
+<!-- ───── FOOT BAND ───── -->
+<section class="foot-band">
+    <div class="wrap foot-band-inner">
+        <div>
+            <span class="lede">Got a niche product idea?</span>
+            <h3>Drop us a line.</h3>
+            <p>If you've got a vertical that's been quietly underserved and an idea for the product nobody's built yet, we'd love to hear about it. No funnel.</p>
+            <div style="margin-top: 1.25rem;"><a class="btn small" href="mailto:theteam@addedpixels.com">theteam@addedpixels.com →</a></div>
+        </div>
+        <div>
+            <h3>Reach us</h3>
+            <ul>
+                <li><a href="tel:+441625803040"><span>+44 (0) 1625 80 30 40</span><span class="k">UK</span></a></li>
+                <li><a href="tel:+443334431009"><span>+44 (0) 33 3443 1009</span><span class="k">UK non-geo</span></a></li>
+                <li><a href="tel:+17029049404"><span>+1 702 904 9404</span><span class="k">US</span></a></li>
+                <li><a href="mailto:theteam@addedpixels.com"><span>theteam@addedpixels.com</span><span class="k">email</span></a></li>
+            </ul>
+        </div>
+        <div>
+            <h3>Other places</h3>
+            <ul>
+                <li><a href="marple.html"><span>Marple case study</span><span class="k">→</span></a></li>
+                <li><a href="poynton-wmc.html"><span>Poynton WMC case study</span><span class="k">→</span></a></li>
+                <li><a href="index.html#work"><span>All work</span><span class="k">→</span></a></li>
+                <li><a href="about.html"><span>About</span><span class="k">→</span></a></li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<footer class="foot">
+    <div class="wrap row">
+        <span>© 2014 — 2026 addedPIXELS · Manchester · UK</span>
+        <span>made by the people who'll also answer the phone</span>
+        <a href="mailto:theteam@addedpixels.com">theteam@addedpixels.com</a>
+    </div>
+</footer>
+
+<script src="js/site-2026.js"></script>
+</body>
+</html>
