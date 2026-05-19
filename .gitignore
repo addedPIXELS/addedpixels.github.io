@@ -1,0 +1,54 @@
+# ── OS junk ──────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+._*
+
+# ── Editors / IDEs ───────────────────────────────────
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+.netrwhist
+
+# ── Claude / AI tooling ──────────────────────────────
+.claude/
+.cursor/
+.aider*
+CLAUDE.local.md
+
+# ── Local dev scratch ────────────────────────────────
+temp/
+tmp/
+scratch/
+*.bak
+*.orig
+*.rej
+*.log
+
+# ── Build artefacts (none yet, but future-proof) ─────
+dist/
+build/
+node_modules/
+.cache/
+.parcel-cache/
+*.pid
+
+# ── Environment ──────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Compressed siblings auto-generated ───────────────
+# (leave commented; we DO want WebP siblings committed)
+# *.webp
+
+# ── Media originals we don't ship ────────────────────
+images/projects/poyntonwmc-lighting-2026/video-scene-mix.m4v
