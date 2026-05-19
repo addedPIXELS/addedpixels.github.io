@@ -261,9 +261,29 @@ h1.hero-title em {
     transform: none;
     border-color: var(--invert-bg-soft);
 }
-.do-card.span-full h3 { color: var(--invert-text); font-size: 1.7rem; max-width: 28ch; line-height: 1.1; }
-.do-card.span-full h3 em { color: var(--green); font-style: italic; }
-.do-card.span-full p { color: var(--invert-text-soft); max-width: 60ch; font-size: 1rem; margin-bottom: 1.25rem; }
+.do-card.span-full h3 {
+    color: var(--invert-text);
+    font-family: var(--display);
+    font-weight: 350;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-size: clamp(1.9rem, 3.6vw, 3rem);
+    max-width: 40ch;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    margin-bottom: 1rem;
+}
+.do-card.span-full h3 em {
+    color: var(--green);
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+}
+.do-card.span-full p {
+    color: var(--invert-text-soft);
+    max-width: 78ch;
+    font-size: 1.1rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.55;
+}
 .do-card.span-full .icn { background: transparent; border-color: var(--green); color: var(--green); }
 .do-card.span-full:hover { box-shadow: 5px 5px 0 var(--green-deep); }
 @media (max-width: 820px) {
