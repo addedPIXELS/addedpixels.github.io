@@ -304,11 +304,14 @@ main, header, footer, section { position: relative; z-index: 1; }
 .nav-drop > a:hover::after { display: none !important; }
 .nav-drop-menu {
     position: absolute;
-    top: 130%; left: 0;
+    /* Flush against the trigger's bottom — visual gap is provided by the
+       menu's own top padding so the hover hit-area is continuous and the
+       cursor doesn't lose hover crossing dead space. */
+    top: 100%; left: 0;
     background: var(--cream);
     border: 1px solid var(--rule);
     border-radius: 14px;
-    padding: 0.5rem;
+    padding: 0.85rem 0.5rem 0.5rem;
     min-width: 200px;
     box-shadow: 0 10px 30px -16px rgba(0,0,0,0.25);
     opacity: 0;
