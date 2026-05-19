@@ -29,6 +29,47 @@
         document.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('is-in'));
     }
 
+    // mobile nav toggle
+    const toggle = document.querySelector('.nav-toggle');
+    const nav    = document.querySelector('header.head .nav');
+    if (toggle && nav) {
+        const closeNav = () => {
+            nav.classList.remove('is-open');
+            toggle.setAttribute('aria-expanded', 'false');
+            document.body.classList.remove('nav-open');
+        };
+        const openNav = () => {
+            nav.classList.add('is-open');
+            toggle.setAttribute('aria-expanded', 'true');
+            document.body.classList.add('nav-open');
+        };
+        toggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            nav.classList.contains('is-open') ? closeNav() : openNav();
+        });
+        // close when tapping any nav link (but not the dropdown parent toggles)
+        nav.addEventListener('click', (e) => {
+            const a = e.target.closest('a');
+            if (!a) return;
+            if (a.parentElement && a.parentElement.classList.contains('nav-drop')) return;
+            closeNav();
+        });
+        // close on backdrop tap (outside the nav)
+        document.addEventListener('click', (e) => {
+            if (!nav.classList.contains('is-open')) return;
+            if (nav.contains(e.target) || toggle.contains(e.target)) return;
+            closeNav();
+        });
+        // close on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && nav.classList.contains('is-open')) closeNav();
+        });
+        // close on resize-to-desktop
+        matchMedia('(min-width: 821px)').addEventListener('change', (e) => {
+            if (e.matches) closeNav();
+        });
+    }
+
     // smooth scroll for internal anchors (account for sticky header)
     document.querySelectorAll('a[href^="#"]').forEach(a => {
         a.addEventListener('click', (e) => {
