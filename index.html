@@ -3,6 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--
+  Pride front door (June only). Sends visitors to the splash once per session.
+  SAFETY: loop-prevention does NOT depend on storage. The "Enter the studio" link
+  carries #entered, and the referrer check is a backup, so clicking through ALWAYS
+  reaches the homepage even if cookies/storage are blocked or silently no-op.
+  Storage is best-effort frequency control only. Any failure → no redirect → site loads.
+-->
+<script>
+(function () {
+    try {
+        if (new Date().getMonth() !== 5) return;                 // June only (0-indexed)
+        // Loop guard #1 (storage-independent): arrived via the splash's Enter link.
+        if (location.hash === '#entered') {
+            try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+            return;
+        }
+        // Loop guard #2 (backup): came from our own Pride page.
+        if (document.referrer && document.referrer.indexOf('/pride.html') !== -1) return;
+        // Frequency (best-effort, never load-bearing): once per browser session.
+        var seen = false;
+        try { seen = sessionStorage.getItem('ap_pride_session') === '1'; } catch (e) {}
+        if (seen) return;
+        try { sessionStorage.setItem('ap_pride_session', '1'); } catch (e) {}
+        location.replace('pride.html');
+    } catch (e) { /* anything unexpected → do nothing, show the site */ }
+})();
+</script>
 <title>addedPIXELS — A small Manchester studio that builds the awkward stuff</title>
 <meta name="description" content="Two humans in Manchester. We build software, wire up hardware, and replace the bits of your stack that have been 'nearly working' for three years.">
 
@@ -600,9 +627,40 @@ h1.hero-title em {
     .letter { padding: 2.5rem 1.5rem; }
     .letter-contact { grid-template-columns: 1fr; }
 }
+
+/* ───── PRIDE BANNER (June only; revealed by site-2026.js) ───── */
+.pride-banner {
+    position: relative; z-index: 25;
+    display: flex; align-items: center; justify-content: center;
+    gap: 0.6rem; flex-wrap: wrap;
+    padding: 0.55rem 2.6rem 0.55rem 1.2rem;
+    text-align: center; font-size: 0.95rem; color: var(--ink);
+    background: var(--cream);
+    background-image: linear-gradient(90deg,
+        rgba(255,45,111,0.12), rgba(255,138,61,0.12), rgba(255,210,61,0.12),
+        rgba(58,208,106,0.12), rgba(31,155,255,0.12), rgba(123,91,255,0.12));
+    border-bottom: 1px solid var(--rule);
+}
+.pride-banner[hidden] { display: none; }
+.pb-flag { font-size: 1.05rem; }
+.pb-link { color: var(--green-deep); font-weight: 600; text-decoration: none; }
+.pb-link:hover { text-decoration: underline; }
+.pb-close {
+    position: absolute; right: 0.6rem; top: 50%; transform: translateY(-50%);
+    background: none; border: 0; font-size: 1.2rem; line-height: 1;
+    color: var(--ink-mute); cursor: pointer; padding: 0.2rem 0.45rem; border-radius: 6px;
+}
+.pb-close:hover { color: var(--ink); }
 </style>
 </head>
 <body>
+
+<!-- Pride banner: hidden by default, revealed in June by site-2026.js. Storage-free way into the splash. -->
+<div class="pride-banner" id="prideBanner" hidden>
+    <span class="pb-flag" aria-hidden="true">🏳️‍🌈</span>
+    <span class="pb-text">Celebrating <a class="pb-link" href="pride.html">Pride</a></span>
+    <button class="pb-close" type="button" id="prideBannerClose" aria-label="Dismiss Pride banner">×</button>
+</div>
 
 <header class="head">
     <div class="wrap head-inner">

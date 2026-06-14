@@ -5,12 +5,26 @@
 (() => {
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Pride Month: swap the header logo to the pride variant for all of June.
+    // Pride: swap the header logo to the pride variant for all of June.
     // Auto-reverts on 1 July; repeats every year. One place, every page.
     if (new Date().getMonth() === 5) { // 0-indexed: 5 = June
         document.querySelectorAll('.brand img').forEach(img => {
             img.src = img.src.replace('_standard_', '_pride_');
         });
+
+        // Homepage Pride banner: a storage-free, always-available way into the
+        // splash for repeat visitors. Dismiss is best-effort (sessionStorage).
+        const banner = document.getElementById('prideBanner');
+        if (banner) {
+            let dismissed = false;
+            try { dismissed = sessionStorage.getItem('ap_pride_banner_x') === '1'; } catch (e) {}
+            if (!dismissed) banner.hidden = false;
+            const close = document.getElementById('prideBannerClose');
+            if (close) close.addEventListener('click', () => {
+                banner.hidden = true;
+                try { sessionStorage.setItem('ap_pride_banner_x', '1'); } catch (e) {}
+            });
+        }
     }
 
     if (!reduce && 'IntersectionObserver' in window) {
