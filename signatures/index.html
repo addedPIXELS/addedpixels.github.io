@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>addedPIXELS — Email signature mockups</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Manrope:wght@400;500;600;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper:#fbf6e9; --ink:#1a1a16; --ink-soft:#3a3a32; --ink-mute:#6a6859;
+    --rule:#d8cfb4; --green:#4caf50; --green-deep:#2e7d32; --terracotta:#d36a3c;
+  }
+  body { margin:0; padding:64px 24px; background:#ebe6d7; color:var(--ink); font-family:'Manrope',-apple-system,'Segoe UI',Arial,sans-serif; }
+  .wrap { max-width:920px; margin:0 auto; }
+  .greet { font-family:'Caveat','Brush Script MT','Snell Roundhand',cursive; font-size:22px; color:var(--green-deep); margin:0 0 8px; }
+  h1 { font-family:'Fraunces',Georgia,serif; font-style:italic; font-weight:350; font-size:46px; letter-spacing:-0.02em; line-height:1.05; margin:0 0 16px; }
+  h1 em { color:var(--green-deep); }
+  .lede { font-size:15px; color:var(--ink-soft); max-width:60ch; margin:0 0 36px; line-height:1.6; }
+  .grid { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:18px; }
+  @media (max-width:780px) { .grid { grid-template-columns:1fr; } }
+  .card { background:var(--paper); border:1px solid var(--rule); border-radius:14px; padding:22px; text-decoration:none; color:inherit; display:block; box-shadow:3px 3px 0 rgba(76,175,80,0.14); transition:transform .2s ease, box-shadow .2s ease; }
+  .card:nth-child(2) { box-shadow:3px 3px 0 rgba(211,106,60,0.18); }
+  .card:nth-child(3) { box-shadow:3px 3px 0 rgba(212,164,55,0.22); }
+  .card:hover { transform:translateY(-3px); box-shadow:5px 6px 0 rgba(76,175,80,0.18); }
+  .card:nth-child(2):hover { box-shadow:5px 6px 0 rgba(211,106,60,0.22); }
+  .card:nth-child(3):hover { box-shadow:5px 6px 0 rgba(212,164,55,0.26); }
+  .card .label { font-family:'Caveat','Brush Script MT','Snell Roundhand',cursive; font-size:18px; color:var(--green-deep); }
+  .card h2 { font-family:'Fraunces',Georgia,serif; font-style:italic; font-weight:400; font-size:22px; margin:2px 0 10px; letter-spacing:-0.01em; }
+  .card p { font-size:13px; color:var(--ink-soft); margin:0; line-height:1.55; }
+  .card .open { display:inline-block; margin-top:14px; font-size:12px; color:var(--green-deep); letter-spacing:0.08em; text-transform:uppercase; font-weight:600; }
+  .notes { margin-top:44px; padding-top:24px; border-top:1px solid var(--rule); font-size:13px; color:var(--ink-mute); max-width:62ch; line-height:1.65; }
+  .notes h3 { font-family:'Fraunces',Georgia,serif; font-style:italic; font-weight:400; font-size:18px; color:var(--ink); margin:0 0 8px; }
+  .notes ul { margin:0; padding-left:18px; }
+  .notes li + li { margin-top:4px; }
+  .notes code { background:var(--paper); padding:1px 6px; border-radius:4px; font-size:12px; border:1px solid var(--rule); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="greet">hello —</p>
+  <h1>Three signature <em>directions</em>.</h1>
+  <p class="lede">Same content, same colour palette as the 2026 site — Fraunces italic, Manrope, Caveat for the hand-written bits, deep green accent. Each variant lives on its own page with a copy-paste HTML block at the bottom.</p>
+
+  <div class="grid">
+    <a class="card" href="variant-a-editorial.html">
+      <span class="label">variant a</span>
+      <h2>Editorial Masthead</h2>
+      <p>Type-led. Big italic name, green hairline, Caveat labels (tel / mail / web). No icons, no boxes.</p>
+      <span class="open">Open →</span>
+    </a>
+    <a class="card" href="variant-b-letterhead.html">
+      <span class="label">variant b</span>
+      <h2>Studio Letterhead</h2>
+      <p>Horizontal letterhead, double rule, inline contact line. Two offset stamps echo the hero cards.</p>
+      <span class="open">Open →</span>
+    </a>
+    <a class="card" href="variant-c-stamped.html">
+      <span class="label">variant c</span>
+      <h2>Stamped Postcard</h2>
+      <p>Photo as a stamp-shadow card. Vertical green rule. Closest to your current layout, redrawn.</p>
+      <span class="open">Open →</span>
+    </a>
+  </div>
+
+  <div class="notes">
+    <h3>How these are built</h3>
+    <ul>
+      <li>Tables + inline styles only — what Gmail, Apple Mail, Outlook and iOS Mail actually render.</li>
+      <li>Fraunces, Manrope and Caveat are <em>linked</em> on these preview pages so you can see the intended look, but the signature HTML uses safe fallbacks: <code>Georgia italic</code> for Fraunces, <code>Brush Script / Snell Roundhand / cursive</code> for Caveat, <code>Arial / system-ui</code> for Manrope.</li>
+      <li>Offset “stamp” shadows render in Gmail web, Apple Mail and iOS; Outlook desktop falls back to a clean bordered card.</li>
+      <li>Logo pulls from <code>addedpixels.com/images/logos/addedpixels_logo_standard_dark.png</code>. Avatar and icons reuse the URLs from your current sig.</li>
+    </ul>
+    <h3 style="margin-top:18px;">Installing in Gmail</h3>
+    <ul>
+      <li>Open your chosen variant page in a browser.</li>
+      <li>Select everything inside the white card (from name to legal footer) and copy.</li>
+      <li>Gmail → Settings → See all settings → Signature → paste. Save.</li>
+      <li>If you prefer pasting raw HTML, expand <em>“Copy raw signature HTML”</em> at the bottom of each variant page and grab the source there.</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

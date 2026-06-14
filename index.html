@@ -429,6 +429,13 @@ h1.hero-title em {
 .w-card.is-full .body { flex: 1; padding: 2.25rem 2.5rem; justify-content: center; }
 .w-card.is-full h3 { font-size: 1.8rem; }
 
+.w-card .img.is-logo { display: flex; align-items: center; justify-content: center; padding: 2.5rem 1.5rem; background: var(--cream-deep); }
+.w-card .img.is-logo img { width: auto; max-width: 80%; height: auto; max-height: 240px; object-fit: contain; filter: none; }
+@media (prefers-color-scheme: dark) {
+    .w-card .img.is-logo { background: #f6efe1; }
+    .w-card .img.is-logo .tag { background: #fbf6e9; color: #2e7d32; border-color: #d8cfb4; }
+}
+
 .w-card.has-overlay .img { position: relative; }
 .w-card.has-overlay .overlay-stat {
     position: absolute;
@@ -623,6 +630,10 @@ h1.hero-title em {
                     <li><a href="poynton-wmc.html" class="case-entry">
                         <span class="t">Poynton WMC</span>
                         <span class="s">intelligent lighting</span>
+                    </a></li>
+                    <li><a href="provendium.html" class="case-entry">
+                        <span class="t">Provendium</span>
+                        <span class="s">Province operations SaaS</span>
                     </a></li>
                     <li class="div"></li>
                     <li><a href="#work" class="case-entry case-all">
@@ -879,10 +890,23 @@ h1.hero-title em {
         </div>
 
         <div class="work-grid">
+            <a class="w-card is-full" href="provendium.html" data-reveal>
+                <div class="img is-logo">
+                    <span class="tape"></span>
+                    <span class="tag">★ Newest · Province SaaS</span>
+                    <img src="images/projects/provendium/provendium-lockup.png" alt="Provendium">
+                </div>
+                <div class="body">
+                    <h3>Provendium, Province-level operational SaaS.</h3>
+                    <p>The platform that sits between a Masonic Province and the work it actually does day-to-day: calendars, role assignments, RSVPs, embeds on Lodge websites, Almoner casework. Multi-tenant from day one. Open source under AGPL-3.0. In build, with Cheshire as pilot tenant.</p>
+                    <span class="more">Read the case study →</span>
+                </div>
+            </a>
+
             <a class="w-card is-full" href="poynton-wmc.html" data-reveal>
                 <div class="img">
                     <span class="tape"></span>
-                    <span class="tag">★ Newest</span>
+                    <span class="tag">Intelligent lighting + iPad</span>
                     <picture>
                         <source srcset="images/projects/poyntonwmc-lighting-2026/360-concert-room.webp" type="image/webp">
                         <img src="images/projects/poyntonwmc-lighting-2026/360-concert-room.JPG" alt="Poynton WMC">
