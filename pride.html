@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pride — addedPIXELS</title>
+<meta name="description" content="addedPIXELS celebrates Pride Month. Built with pride — every month of the year.">
+<meta name="theme-color" content="#08070c">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="addedPIXELS">
+<meta property="og:url" content="https://addedpixels.com/pride.html">
+<meta property="og:title" content="addedPIXELS — Pride">
+<meta property="og:description" content="Celebrating Pride Month. Built with pride — every month of the year.">
+<meta property="og:image" content="https://addedpixels.com/images/share/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="addedPIXELS — Pride">
+<meta name="twitter:description" content="Celebrating Pride Month. Built with pride — every month of the year.">
+<meta name="twitter:image" content="https://addedpixels.com/images/share/og-default.png">
+
+<link rel="shortcut icon" type="image/png" href="images/logos/addedpixels_favicon_dark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--stage:#08070c;--hand:"Caveat",cursive;--sans:"Manrope",-apple-system,sans-serif;--display:"Anton",sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{background:var(--stage);color:#fff;font-family:var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased;}
+.stage{position:fixed;inset:0;overflow:hidden;background:radial-gradient(120% 80% at 50% -10%,#161020 0%,var(--stage) 55%);}
+.waves{position:absolute;inset:0;z-index:1;}
+.waves svg{width:100%;height:100%;display:block;}
+.waves g{will-change:transform;}
+/* dark scrim over the top half so the wordmark reads cleanly */
+.scrim{position:absolute;inset:0;z-index:2;pointer-events:none;
+    background:linear-gradient(180deg,var(--stage) 0%,rgba(8,7,12,.85) 30%,rgba(8,7,12,.35) 52%,transparent 70%);}
+.grain{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.28;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+.content{position:relative;z-index:3;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem 1.5rem;padding-bottom:14vh;}
+.brand{position:absolute;top:clamp(1.5rem,4vh,2.6rem);left:50%;display:flex;align-items:center;gap:.75rem;opacity:0;animation:rc .9s .2s ease forwards;}
+.brand img{height:26px;}.brand .since{font-family:var(--hand);font-size:1.05rem;color:rgba(255,255,255,.6);padding-left:.6rem;border-left:1px solid rgba(255,255,255,.2);}
+.pride{font-family:var(--display);font-weight:400;font-size:clamp(4.5rem,20vw,16rem);line-height:.9;letter-spacing:.01em;
+    text-shadow:0 10px 60px rgba(0,0,0,.55);cursor:default;
+    --mx:-400px;--my:50%;
+    /* letters read white; a soft circular spotlight around the cursor reveals the rainbow beneath */
+    background:
+        radial-gradient(circle 130px at var(--mx) var(--my), transparent 0, transparent 42px, #fff 130px),
+        linear-gradient(100deg,#ff2d6f,#ff8a3d,#ffd23d,#3ad06a,#1f9bff,#7b5bff,#ff2d6f);
+    -webkit-background-clip:text;background-clip:text;}
+.pride span{display:inline-block;opacity:0;transform:translateY(30px);
+    -webkit-text-fill-color:transparent;color:transparent;
+    animation:letter .95s cubic-bezier(.2,.7,.25,1) forwards;}
+.pride span:nth-child(1){animation-delay:.35s}.pride span:nth-child(2){animation-delay:.43s}
+.pride span:nth-child(3){animation-delay:.51s}.pride span:nth-child(4){animation-delay:.59s}.pride span:nth-child(5){animation-delay:.67s}
+.tag{margin-top:1.3rem;font-size:clamp(1rem,2.3vw,1.3rem);color:rgba(255,255,255,.86);max-width:34ch;opacity:0;animation:r .9s 1.05s ease forwards;}
+.tag b{color:#fff;font-weight:700;}
+.enter{margin-top:2.1rem;display:inline-flex;align-items:center;gap:.55rem;padding:.95rem 1.8rem;border-radius:999px;font-weight:700;color:#0c0a10;background:#fff;text-decoration:none;transition:transform .25s,box-shadow .25s;opacity:0;animation:r .9s 1.25s ease forwards;box-shadow:0 10px 30px -10px rgba(0,0,0,.6);}
+.enter:hover{transform:translateY(-2px);box-shadow:0 16px 40px -12px rgba(255,90,140,.5);}
+.enter .ar{transition:transform .25s;}.enter:hover .ar{transform:translateX(4px);}
+.note{position:absolute;bottom:1.4rem;left:50%;font-family:var(--hand);font-size:1.05rem;color:rgba(255,255,255,.55);z-index:4;white-space:nowrap;opacity:0;animation:rc .9s 1.4s ease forwards;}
+@keyframes r{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes rc{from{opacity:0;transform:translateX(-50%) translateY(14px)}to{opacity:1;transform:translateX(-50%)}}
+@keyframes letter{to{opacity:1;transform:none}}
+.brand,.note{transform:translateX(-50%);}
+@keyframes sway{0%,100%{transform:translateX(-26px)}50%{transform:translateX(26px)}}
+@media(max-width:600px){.brand .since{display:none;}}
+@media(prefers-reduced-motion:reduce){
+    .waves g{animation:none!important;}
+    .pride span,.brand,.tag,.enter,.note{opacity:1!important;transform:none!important;animation:none!important;}
+    .brand,.note{transform:translateX(-50%)!important;}
+}
+</style>
+</head>
+<body>
+<div class="stage" aria-hidden="true">
+    <div class="waves"><svg id="waves" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMax slice" role="presentation"></svg></div>
+    <div class="scrim"></div>
+    <div class="grain"></div>
+</div>
+<main class="content">
+    <a class="brand" href="index.html" aria-label="addedPIXELS home">
+        <img src="images/logos/addedpixels_logo_pride_light.png" alt="addedPIXELS"><span class="since">est. '14</span>
+    </a>
+    <h1 class="pride" aria-label="Pride"><span>P</span><span>R</span><span>I</span><span>D</span><span>E</span></h1>
+    <p class="tag">Built with <b>pride</b> — every month of the year.</p>
+    <a class="enter" href="index.html">Enter the studio <span class="ar">→</span></a>
+    <p class="note">No rush — <a href="index.html" style="color:rgba(255,255,255,.85)">step inside whenever you're ready →</a></p>
+</main>
+<script>
+(()=>{
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const NS='http://www.w3.org/2000/svg';
+const svg=document.getElementById('waves');
+// back(top) -> front(bottom): rainbow stack of filled waves
+const layers=[
+ {color:'#6b46ff',base:430,amp:46,phase:0.0,sway:22},
+ {color:'#1f8fff',base:480,amp:52,phase:1.1,sway:18},
+ {color:'#19c27a',base:535,amp:48,phase:2.0,sway:15},
+ {color:'#ffd23d',base:590,amp:44,phase:0.7,sway:12},
+ {color:'#ff8a3d',base:645,amp:40,phase:2.7,sway:9},
+ {color:'#ff4d7d',base:700,amp:36,phase:1.6,sway:7},
+ {color:'#e01f5a',base:755,amp:32,phase:3.1,sway:5},
+];
+function wavePath(base,amp,phase){
+    const W=1640,H=800,step=24,k=(Math.PI*2)/720;
+    let d=`M -200 ${(base+Math.sin(phase)*amp).toFixed(1)}`;
+    for(let x=-200+step;x<=W;x+=step){
+        const y=base+Math.sin(x*k+phase)*amp;
+        d+=` L ${x} ${y.toFixed(1)}`;
+    }
+    d+=` L ${W} ${H} L -200 ${H} Z`;
+    return d;
+}
+layers.forEach((l,i)=>{
+    const g=document.createElementNS(NS,'g');
+    if(!reduce) g.style.animation=`sway ${6.5+i*0.9}s ease-in-out ${i*-1.0}s infinite`;
+    const p=document.createElementNS(NS,'path');
+    p.setAttribute('d',wavePath(l.base,l.amp,l.phase));
+    p.setAttribute('fill',l.color);
+    p.setAttribute('opacity','0.95');
+    g.appendChild(p);
+    svg.appendChild(g);
+});
+
+// rainbow spotlight on the wordmark — a soft circle of colour follows the cursor
+const pride=document.querySelector('.pride');
+if(pride){
+    const move=e=>{
+        const r=pride.getBoundingClientRect();
+        const pt=e.touches?e.touches[0]:e;
+        pride.style.setProperty('--mx',(pt.clientX-r.left)+'px');
+        pride.style.setProperty('--my',(pt.clientY-r.top)+'px');
+    };
+    const hide=()=>pride.style.setProperty('--mx','-400px');
+    pride.addEventListener('pointermove',move);
+    pride.addEventListener('pointerleave',hide);
+    pride.addEventListener('touchmove',move,{passive:true});
+    pride.addEventListener('touchend',hide);
+}
+})();
+</script>
+</body>
+</html>

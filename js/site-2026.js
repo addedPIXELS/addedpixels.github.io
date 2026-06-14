@@ -5,6 +5,14 @@
 (() => {
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // Pride Month: swap the header logo to the pride variant for all of June.
+    // Auto-reverts on 1 July; repeats every year. One place, every page.
+    if (new Date().getMonth() === 5) { // 0-indexed: 5 = June
+        document.querySelectorAll('.brand img').forEach(img => {
+            img.src = img.src.replace('_standard_', '_pride_');
+        });
+    }
+
     if (!reduce && 'IntersectionObserver' in window) {
         const io = new IntersectionObserver(es => {
             es.forEach(e => {
