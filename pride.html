@@ -40,19 +40,24 @@ body{background:var(--stage);color:#fff;font-family:var(--sans);overflow:hidden;
 .content{position:relative;z-index:3;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem 1.5rem;padding-bottom:14vh;}
 .brand{position:absolute;top:clamp(1.5rem,4vh,2.6rem);left:50%;display:flex;align-items:center;gap:.75rem;opacity:0;animation:rc .9s .2s ease forwards;}
 .brand img{height:26px;}.brand .since{font-family:var(--hand);font-size:1.05rem;color:rgba(255,255,255,.6);padding-left:.6rem;border-left:1px solid rgba(255,255,255,.2);}
+/* Entrance lives on a wrapper so the clipped element itself is never composited
+   separately — that combination is what made the text vanish in Chrome. */
+.pride-wrap{opacity:0;transform:translateY(30px);animation:pridein .95s .4s cubic-bezier(.2,.7,.25,1) forwards;}
+@keyframes pridein{to{opacity:1;transform:none}}
 .pride{font-family:var(--display);font-weight:400;font-size:clamp(4.5rem,20vw,16rem);line-height:.9;letter-spacing:.01em;
     text-shadow:0 10px 60px rgba(0,0,0,.55);cursor:default;
     --mx:-400px;--my:50%;
-    /* letters read white; a soft circular spotlight around the cursor reveals the rainbow beneath */
+    /* letters read white; a soft circular spotlight around the cursor reveals the rainbow beneath.
+       Gradient + clip + transparent fill all on this one element (text is its direct child). */
     background:
         radial-gradient(circle 130px at var(--mx) var(--my), transparent 0, transparent 42px, #fff 130px),
         linear-gradient(100deg,#ff2d6f,#ff8a3d,#ffd23d,#3ad06a,#1f9bff,#7b5bff,#ff2d6f);
-    -webkit-background-clip:text;background-clip:text;}
-.pride span{display:inline-block;opacity:0;transform:translateY(30px);
-    -webkit-text-fill-color:transparent;color:transparent;
-    animation:letter .95s cubic-bezier(.2,.7,.25,1) forwards;}
-.pride span:nth-child(1){animation-delay:.35s}.pride span:nth-child(2){animation-delay:.43s}
-.pride span:nth-child(3){animation-delay:.51s}.pride span:nth-child(4){animation-delay:.59s}.pride span:nth-child(5){animation-delay:.67s}
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;}
+/* Fallback: if background-clip:text isn't supported, show solid white letters. */
+@supports not ((-webkit-background-clip:text) or (background-clip:text)){
+    .pride{background:none;-webkit-text-fill-color:#fff;color:#fff;}
+}
 .tag{margin-top:1.3rem;font-size:clamp(1rem,2.3vw,1.3rem);color:rgba(255,255,255,.86);max-width:34ch;opacity:0;animation:r .9s 1.05s ease forwards;}
 .tag b{color:#fff;font-weight:700;}
 .enter{margin-top:2.1rem;display:inline-flex;align-items:center;gap:.55rem;padding:.95rem 1.8rem;border-radius:999px;font-weight:700;color:#0c0a10;background:#fff;text-decoration:none;transition:transform .25s,box-shadow .25s;opacity:0;animation:r .9s 1.25s ease forwards;box-shadow:0 10px 30px -10px rgba(0,0,0,.6);}
@@ -61,13 +66,12 @@ body{background:var(--stage);color:#fff;font-family:var(--sans);overflow:hidden;
 .note{position:absolute;bottom:1.4rem;left:50%;font-family:var(--hand);font-size:1.05rem;color:rgba(255,255,255,.55);z-index:4;white-space:nowrap;opacity:0;animation:rc .9s 1.4s ease forwards;}
 @keyframes r{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes rc{from{opacity:0;transform:translateX(-50%) translateY(14px)}to{opacity:1;transform:translateX(-50%)}}
-@keyframes letter{to{opacity:1;transform:none}}
 .brand,.note{transform:translateX(-50%);}
 @keyframes sway{0%,100%{transform:translateX(-26px)}50%{transform:translateX(26px)}}
 @media(max-width:600px){.brand .since{display:none;}}
 @media(prefers-reduced-motion:reduce){
     .waves g{animation:none!important;}
-    .pride span,.brand,.tag,.enter,.note{opacity:1!important;transform:none!important;animation:none!important;}
+    .pride-wrap,.brand,.tag,.enter,.note{opacity:1!important;transform:none!important;animation:none!important;}
     .brand,.note{transform:translateX(-50%)!important;}
 }
 </style>
@@ -82,7 +86,7 @@ body{background:var(--stage);color:#fff;font-family:var(--sans);overflow:hidden;
     <a class="brand" href="index.html#entered" aria-label="addedPIXELS home">
         <img src="images/logos/addedpixels_logo_pride_light.png" alt="addedPIXELS"><span class="since">est. '14</span>
     </a>
-    <h1 class="pride" aria-label="Pride"><span>P</span><span>R</span><span>I</span><span>D</span><span>E</span></h1>
+    <div class="pride-wrap"><h1 class="pride" aria-label="Pride">PRIDE</h1></div>
     <p class="tag">Built with <b>pride</b> — all year round.</p>
     <a class="enter" href="index.html#entered">Enter the studio <span class="ar">→</span></a>
     <p class="note">No rush — <a href="index.html#entered" style="color:rgba(255,255,255,.85)">step inside whenever you're ready →</a></p>
